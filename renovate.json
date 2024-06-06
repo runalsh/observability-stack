@@ -58,6 +58,6 @@
     "automerge": true,
     "requiredStatusChecks": null,
     "dependencyDashboard": true,
-    "baseBranches": ["main", "observ-stack"],
+    "baseBranches": ["main"],
     "timezone": "Europe/Moscow"
   }

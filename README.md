@@ -1,8 +1,6 @@
 ### Observability stack 
 
-from https://github.com/runalsh/easylinux
-
-All services under reverse proxy (caddy, angie). Access to services available via overlay network (tailscale and zerotier).
+All services under reverse proxy (angie, caddy) with basic auth and https. Access to services available via overlay network (tailscale and zerotier).
 
 LAB path: kafka lab (producer py + consumer py + 3 kafka nodes (zookeeper) + jwt)
 
@@ -30,4 +28,4 @@ TODO:
     Tetragon (ebpf)
     Open tracing 
     Jaeger
-    Try to make apps on py and go with tracing
+    Try to make apps on py and go with tracing or add auto-tracing tool

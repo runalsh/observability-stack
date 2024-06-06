@@ -1,4 +1,3 @@
 .env.override
 real
-etc/grafana/plugins/victorialogs-datasource
-etc/grafana/plugins/victoriametrics-datasource
+etc/grafana/plugins

@@ -215,13 +215,13 @@ services:
     image: grafana/grafana:11.0.0
     container_name: grafana
     entrypoint: [ "/bin/bash", "-c" ]
-    command: [ "/download.sh && /run.sh" ]
+    command: [ "/etc/grafana/download.sh && /run.sh" ]
     volumes:
       - grafana_data:/var/lib/grafana
       - ./etc/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
       - ./etc/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
-      - ./etc/grafana/plugins/:/var/lib/grafana/plugins
-      - ./etc/grafana/plugins/download.sh:/download.sh
+      - ./var/lib/grafana/plugins:/var/lib/grafana/plugins
+      - ./etc/grafana/download.sh:/etc/grafana/download.sh
     restart: always
     environment:
       - GF_SECURITY_ADMIN_USER=admin

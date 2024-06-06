@@ -1,0 +1,166 @@
+services:
+
+  prometheus:
+    image: "prom/prometheus"
+    hostname: prometheus
+    ports:
+     - "9090:9090"
+    volumes:
+     - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    command: "--config.file=/etc/prometheus/prometheus.yml"
+    container_name: prometheus
+ 
+  
+  jmx-kafka1:
+    image: "sscaling/jmx-prometheus-exporter"
+    ports:
+     - "5556:5556"
+    environment:
+     CONFIG_YML : "/etc/jmx_exporter/config.yml"
+    volumes:
+     - ./etc/jmx_exporter/jmx_exporter1.yml:/etc/jmx_exporter/config.yml
+    container_name: jmx-kafka1
+    depends_on:
+     - kafka1
+
+
+  jmx-kafka2:
+    image: "sscaling/jmx-prometheus-exporter"
+    ports:
+     - "5557:5556"
+    environment:
+     CONFIG_YML : "/etc/jmx_exporter/config.yml"
+
+    volumes:
+     - ./etc/jmx_exporter/jmx_exporter2.yml:/etc/jmx_exporter/config.yml
+    container_name: jmx-kafka2
+    depends_on:
+     - kafka2
+
+
+  jmx-kafka3:
+    image: "sscaling/jmx-prometheus-exporter"
+    ports:
+     - "5558:5556"
+    environment:
+     CONFIG_YML : "/etc/jmx_exporter/config.yml"
+    volumes:
+     - ./etc/jmx_exporter/jmx_exporter3.yml:/etc/jmx_exporter/config.yml
+    container_name: jmx-kafka3
+    depends_on:
+     - kafka3
+
+  grafana:
+    image: grafana/grafana
+    ports:
+     - "3000:3000"
+    environment:
+      GF_PATHS_DATA : /var/lib/grafana
+      GF_SECURITY_ADMIN_PASSWORD : kafka
+    volumes:
+     - ./grafana/provisioning:/etc/grafana/provisioning
+     - ./grafana/dashboards:/var/lib/grafana/dashboards
+    container_name: grafana
+
+
+  zookeeper:
+    image: zookeeper:3.4.9
+    hostname: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOO_MY_ID: 1
+      ZOO_PORT: 2181
+      ZOO_SERVERS: server.1=zookeeper:2888:3888
+    volumes:
+      - ./data/zookeeper/data:/data
+      - ./data/zookeeper/datalog:/datalog
+
+  kafka1:
+    image: confluentinc/cp-kafka:5.3.0
+    hostname: kafka1
+    ports:
+      - "9091:9091"
+      - 9991:9991
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_INTERNAL://kafka1:19091,LISTENER_DOCKER_EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9091
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_DOCKER_INTERNAL
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+      KAFKA_BROKER_ID: 1
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: kafka1:19091
+      CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
+      CONFLUENT_METRICS_ENABLE: 'false'
+      KAFKA_JMX_PORT: 9991
+    volumes:
+      - ./data/kafka1/data:/var/lib/kafka/data
+    depends_on:
+      - zookeeper
+
+  kafka2:
+    image: confluentinc/cp-kafka:5.3.0
+    hostname: kafka2
+    ports:
+      - "9092:9092"
+      - 9992:9992
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_INTERNAL://kafka2:19092,LISTENER_DOCKER_EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_DOCKER_INTERNAL
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_BROKER_ID: 2
+      CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: kafka1:19092
+      CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
+      CONFLUENT_METRICS_ENABLE: 'false'
+      KAFKA_JMX_PORT: 9992
+    volumes:
+      - ./data/kafka2/data:/var/lib/kafka/data
+    depends_on:
+      - zookeeper 
+
+  kafka3:
+    image: confluentinc/cp-kafka:5.3.0
+    hostname: kafka3
+    ports:
+      - 9093:9093
+      - 9994:9994
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_INTERNAL://kafka3:19093,LISTENER_DOCKER_EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_DOCKER_INTERNAL
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+      KAFKA_BROKER_ID: 3
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: kafka1:19093
+      CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
+      CONFLUENT_METRICS_ENABLE: 'false'
+      KAFKA_JMX_PORT: 9994
+    volumes:
+      - ./data/kafka3/data:/var/lib/kafka/data
+    depends_on:
+      - zookeeper
+
+  kafdrop:
+    image: obsidiandynamics/kafdrop
+    restart: "no"
+    ports:
+      - "9000:9000"
+    environment:
+      KAFKA_BROKERCONNECT: "kafka1:19091"
+    depends_on:
+      - kafka1
+      - kafka2
+      - kafka3
+
+
+
+
+
+
+
+
+
+
+
+

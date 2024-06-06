@@ -23,7 +23,11 @@ TODO:
 
     Save (or backup) metrics and logs to minio-s3
     Thanos as HA storage
+    Clickhouse \ OpenSearch as logs storage
     Sentry
+    Open Telemetry collector
+    Vector
     Tetragon (ebpf)
-    Tracing: opentracing, jaeger
+    Open tracing 
+    Jaeger
     Try to make apps on py and go with tracing

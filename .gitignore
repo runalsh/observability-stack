@@ -1,5 +1,4 @@
 .env.override
-observability-stack/real
-observability-stack/etc/grafana/plugins/victorialogs-datasource
-observability-stack/etc/grafana/plugins/victoriametrics-datasource
 real
+etc/grafana/plugins/victorialogs-datasource
+etc/grafana/plugins/victoriametrics-datasource

@@ -1,3 +1,4 @@
 .env.override
 real
 etc/grafana/plugins
+LABS/kafka/data

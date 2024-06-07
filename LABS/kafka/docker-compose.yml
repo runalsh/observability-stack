@@ -1,7 +1,7 @@
 services:
 
   prometheus:
-    image: "prom/prometheus"
+    image: prom/prometheus:v2.52.0
     hostname: prometheus
     ports:
      - "9090:9090"
@@ -12,7 +12,7 @@ services:
  
   
   jmx-kafka1:
-    image: "sscaling/jmx-prometheus-exporter"
+    image: sscaling/jmx-prometheus-exporter:0.12.0
     ports:
      - "5556:5556"
     environment:
@@ -25,7 +25,7 @@ services:
 
 
   jmx-kafka2:
-    image: "sscaling/jmx-prometheus-exporter"
+    image: sscaling/jmx-prometheus-exporter:0.12.0
     ports:
      - "5557:5556"
     environment:
@@ -39,7 +39,7 @@ services:
 
 
   jmx-kafka3:
-    image: "sscaling/jmx-prometheus-exporter"
+    image: sscaling/jmx-prometheus-exporter:0.12.0
     ports:
      - "5558:5556"
     environment:
@@ -51,7 +51,7 @@ services:
      - kafka3
 
   grafana:
-    image: grafana/grafana
+    image: grafana/grafana:11.0.0
     ports:
      - "3000:3000"
     environment:
@@ -64,7 +64,7 @@ services:
 
 
   zookeeper:
-    image: zookeeper:3.9.2
+    image: zookeeper:3.4.9
     hostname: zookeeper
     ports:
       - "2181:2181"
@@ -77,7 +77,7 @@ services:
       - ./data/zookeeper/datalog:/datalog
 
   kafka1:
-    image: confluentinc/cp-kafka:5.5.12
+    image: confluentinc/cp-kafka:5.3.0
     hostname: kafka1
     ports:
       - "9091:9091"
@@ -99,7 +99,7 @@ services:
       - zookeeper
 
   kafka2:
-    image: confluentinc/cp-kafka:5.5.12
+    image: confluentinc/cp-kafka:5.3.0
     hostname: kafka2
     ports:
       - "9092:9092"
@@ -120,14 +120,14 @@ services:
       - zookeeper 
 
   kafka3:
-    image: confluentinc/cp-kafka:5.5.12
+    image: confluentinc/cp-kafka:5.3.0
     hostname: kafka3
     ports:
       - 9093:9093
       - 9994:9994
     environment:
       KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_INTERNAL://kafka3:19093,LISTENER_DOCKER_EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9093
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_DOCKER_INTERNAL
       KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
       KAFKA_BROKER_ID: 3
@@ -142,7 +142,7 @@ services:
       - zookeeper
 
   kafdrop:
-    image: obsidiandynamics/kafdrop
+    image: obsidiandynamics/kafdrop:4.0.2-SNAPSHOT
     restart: "no"
     ports:
       - "9000:9000"
@@ -153,7 +153,23 @@ services:
       - kafka2
       - kafka3
 
+  kafka-ui:
+    container_name: kafka-ui
+    image: provectuslabs/kafka-ui:v0.7.2
+    ports:
+      - 8080:8080
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka1:19091
+      KAFKA_CLUSTERS_0_KAFKACONNECT_0_NAME: first
+      KAFKA_CLUSTERS_1_NAME: secondLocal
+      KAFKA_CLUSTERS_1_BOOTSTRAPSERVERS: kafka2:19092
+      KAFKA_CLUSTERS_2_NAME: thirdLocal
+      KAFKA_CLUSTERS_2_BOOTSTRAPSERVERS: kafka3:19093
+      DYNAMIC_CONFIG_ENABLED: 'true'
 
+    # volumes:
+    #   - ~/kui/config.yml:/etc/kafkaui/dynamic_config.yaml
 
 
 

@@ -13,7 +13,7 @@
         "matchUpdateTypes": [
           "patch"
         ],
-        "automerge": true,
+        "automerge": false,
         "schedule": [],
         "labels": [
           "dependencies",
@@ -29,7 +29,7 @@
         "matchUpdateTypes": [
           "minor"
         ],
-        "automerge": true,
+        "automerge": false,
         "schedule": [],
         "labels": [
           "dependencies",
@@ -55,7 +55,7 @@
       }
     ],
     "automergeType": "branch",
-    "automerge": true,
+    "automerge": false,
     "requiredStatusChecks": null,
     "dependencyDashboard": true,
     "baseBranches": ["main"],

@@ -136,4 +136,31 @@ scrape_configs:
   - output:
       source: log      
 
-      
+- job_name: log-generator-apache
+  pipeline_stages:
+  - match:
+      selector: '{job="log-generator"}'
+      stages:
+      - regex: 
+          expression: '^(?P<ip>.*) - - \[(?P<timestamp>(.*))] \"(?P<log_level>\S*) (?P<http_verb>\S*) \S* \S*\" (?P<http_status_code>.*) '
+      - labels:
+          # timestamp:
+          http_verb:
+          http_status_code:
+          log_level:
+
+- job_name: generated-logs
+  static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: generated-logs
+          __path__: /var/log/flog/generated-logs.txt
+  pipeline_stages:
+      - json:
+          expressions:
+            http_method: 'method'
+            http_status: "status"
+      - labels:
+          http_method:
+          http_status:

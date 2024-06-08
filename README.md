@@ -15,17 +15,19 @@ Contain:
       Storage: minio
       SEC: keycloak
       
+      Log generation: flog, log-generator (apache, from pip)
+
       Other: watchtower, tailscale, zerotier, certbot, angie, caddy, postgres
 
 TODO:
 
-    Save (or backup) metrics and logs to minio-s3
+    done Save (or backup) metrics and logs to minio-s3
     Thanos as HA storage
     Clickhouse \ OpenSearch as logs storage
     Sentry
-    Open Telemetry collector
+    OpenTelemetry collector
     Vector
     Tetragon (ebpf)
-    Open tracing 
+    OpenTracing 
     Jaeger
     Try to make apps on py and go with tracing or add auto-tracing tool

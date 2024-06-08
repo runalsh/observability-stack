@@ -33,6 +33,13 @@ storage_config:
   #   shared_store: filesystem
   filesystem:
     directory: /var/lib/loki/chunks
+  aws:
+    endpoint: minio:9000
+    insecure: true
+    bucketnames: loki-data
+    access_key_id: s3accesskey
+    secret_access_key: s3accesskey
+    s3forcepathstyle: true
 
 query_range:
   results_cache:
@@ -56,7 +63,14 @@ schema_config:
     #   schema: v11
     #   index:
     #     prefix: index_
-    #     period: 24h    
+    #     period: 24h
+    - from: 2020-08-01
+      store: boltdb-shipper
+      object_store: s3
+      schema: v11
+      index:
+        prefix: index_
+        period: 24h
 
 limits_config:
   retention_period: 7d # days to delete old logs, you can change

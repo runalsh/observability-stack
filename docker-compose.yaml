@@ -21,6 +21,8 @@ volumes:
     victorialogs_data:
     vmagent_data:
     angie_data:
+    log-generator_data:
+    flog_data:
 
 services:
 
@@ -140,6 +142,8 @@ services:
       - ./etc/promtail:/etc/promtail:ro
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - promtail_data:/tmp/promtail
+      - flog_data:/var/log/flog:ro
+      - log-generator_data:/var/log/log-generator-apache:ro
     command: 
       - '-config.file=/etc/promtail/config.yml'
     restart: always
@@ -455,6 +459,9 @@ services:
       - MINIO_COMPRESSION_ENABLE="on"
       - MINIO_COMPRESSION_EXTENSIONS=".txt,.log,.csv,.json,.tar,.xml,.bin"
       - MINIO_COMPRESSION_MIME_TYPES="text/*,application/json,application/xml"
+      - MINIO_ACCESS_KEY=s3accesskey
+      - MINIO_SECRET_KEY=s3accesskey
+
     entrypoint:
       - sh
       - -euc
@@ -520,9 +527,49 @@ services:
       - observability
     logging: *default-logging 
 
+  log-generator-apache:
+    build:
+      context: ./log-generator
+      dockerfile: Dockerfile
+      tags:
+        - "runalsh/log-generator:latest"
+    volumes:
+      - ./log-generator:/var/log-generator:ro
+      - log-generator_data:/var/log/log-generator-apache
+    networks:
+      - observability    
+    logging: *default-logging
 
+  flog:
+    image: mingrammer/flog:0.4.3
+    command:
+      - --loop
+      - --format=json
+      - --number=10
+      - --delay=100ms
+      - --output=/var/log/flog/generated-logs.txt
+      - --overwrite
+      - --type=log
+    networks:
+      - observability
+    volumes:
+      - flog_data:/var/log/flog
+    # logging:
+    #   driver: fluentd
+    #   options:
+    #     mode: non-blocking
+    #     fluentd-async-connect: "true"
+    #     fluentd-sub-second-precision: "true"
 
-
+  # telemetrygen:
+  #   build:
+  #     context: ../../../cmd/telemetrygen/
+  #   command:
+  #     - traces
+  #     - --otlp-endpoint=otecollector:4317
+  #     - --otlp-insecure
+  #     - --rate=100
+  #     - --duration=10h
 
 
 

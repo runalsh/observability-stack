@@ -1,5 +1,5 @@
 time
 datetime
-kafka
+kafka-python
 
 

@@ -64,7 +64,7 @@ services:
 
 
   zookeeper:
-    image: zookeeper:3.4.9
+    image: zookeeper:3.9.2
     hostname: zookeeper
     ports:
       - "2181:2181"

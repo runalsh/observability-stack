@@ -2,7 +2,7 @@ include:
   - docker-compose.agents.yaml
   - docker-compose.override.yaml
 #  - ./opensearch/docker-compose.opensearch.yaml
-  - ./elasticsearch/docker-compose.elasticsearch.yaml
+#  - ./elasticsearch/docker-compose.elasticsearch.yaml
 
 x-logging:
       &default-logging
@@ -574,6 +574,7 @@ services:
     logging: *default-logging 
 
   log-generator-apache:
+    container_name: log-generator-apache
     # build:
     #   context: ./log-generator
     #   dockerfile: Dockerfile
@@ -588,6 +589,7 @@ services:
     logging: *default-logging
 
   flog:
+    container_name: flog
     image: mingrammer/flog:0.4.3
     command:
       - --loop

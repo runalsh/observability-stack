@@ -13,11 +13,24 @@ filebeat.inputs:
       tags: [ "log-generator" ]
       
 
-output.elasticsearch:
-  hosts: [ "elasticsearch:9200" ] 
-  username: "admin"             
-  password: "admin"             
-  indices:
-    - index: "filebeat-demo-%{+yyyy.MM.dd}"
-      when.contains:
-        tags: "demo"
+processors:
+  - drop_fields:
+      fields: ["ecs", "input", "host", "agent", "log.offset"]
+      ignore_missing: true
+
+output.kafka:
+  enabled: true
+  hosts: ["kafka:9092"]
+  topic: filebeat-elk  #-%{[fields.topic]}
+  worker: 2
+  keep_alive: 60
+  required_acks: 1
+
+# output.elasticsearch:
+#   hosts: [ "elasticsearch:9200" ] 
+#   username: "admin"             
+#   password: "admin"             
+#   indices:
+#     - index: "filebeat-elk-%{+yyyy.MM.dd}"
+#       when.contains:
+#         tags: "demo"

@@ -565,7 +565,7 @@ services:
       replicas: $minio 
 
   keycloak:
-    image: keycloak/keycloak:24.0.4
+    image: keycloak/keycloak:24.0.5
     container_name: keycloak
     environment:
       KEYCLOAK_ADMIN: admin

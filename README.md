@@ -12,8 +12,10 @@ Contain:
       Exporters: node_exporter, cadvizor, blackbox-exporter, promtail
       Aletring: alertmanager, vmalert
       UI: grafana
-      Storage: minio
+      Storage: minio (save metrics and logs)
       SEC: keycloak
+
+      Full stacks: ELK, OLOD (Opensearch+Logstash-os+Opensearch-Dashboard)
       
       Log generation: flog, log-generator (apache, from pip)
 
@@ -21,9 +23,7 @@ Contain:
 
 TODO:
 
-    done Save (or backup) metrics and logs to minio-s3
     Thanos as HA storage
-    Clickhouse \ OpenSearch as logs storage
     Sentry
     OpenTelemetry collector
     Vector

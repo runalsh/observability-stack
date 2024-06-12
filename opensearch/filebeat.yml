@@ -1,0 +1,23 @@
+
+filebeat.inputs:
+    - type: log
+      enabled: true
+      paths:
+        - /logs/flog_data/*
+      tags: [ "flog" ]
+
+    - type: log
+      enabled: true
+      paths:
+        - /logs/log-generator_data/*
+      tags: [ "log-generator" ]
+      
+
+output.elasticsearch:
+  hosts: [ "opensearch:9200" ] 
+  username: "admin"             
+  password: "admin"             
+  indices:
+    - index: "filebeat-demo-%{+yyyy.MM.dd}"
+      when.contains:
+        tags: "demo"

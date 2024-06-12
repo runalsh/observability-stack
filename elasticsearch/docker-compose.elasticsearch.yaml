@@ -1,0 +1,78 @@
+services:
+
+  kibana:
+    container_name: kibana
+    image: kibana:7.17.21 #8.14.0
+    restart: always
+    ports:
+      - "5602:5601"
+    environment:
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+      ELASTICSEARCH_HOSTS: '["http://elasticsearch:9200"]'
+    volumes:
+      - type: bind
+        source: kibana.yml
+        target: /usr/share/kibana/config/kibana.yml
+        read_only: true
+    networks:
+      - elasticsearchnetwork    
+
+  logstash-es:
+    container_name: logstash-es
+    image: logstash:7.17.21  #8.14.0
+    restart: always
+    ports:
+      - "5002:5001"
+    environment:
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+    networks:
+      - elasticsearchnetwork   
+    volumes:
+      - type: bind
+        source: ./logstash.yml
+        target: /usr/share/logstash/config/logstash.yml
+        read_only: true
+      - type: bind
+        source: ./logstash-es.conf
+        target: /usr/share/logstash/pipeline/logstash.conf
+        read_only: true
+
+  filebeat-es:
+    image: elastic/filebeat:7.17.21
+    container_name: filebeat-es
+    restart: unless-stopped
+    command: filebeat -e -strict.perms=false
+    volumes:
+      - ./filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      - flog_data:/logs/flog_data:ro
+      - log-generator_data:/logs/log-generator_data:ro
+    networks:
+      - elasticsearchnetwork
+
+  elasticsearch:
+    container_name: elasticsearch
+    image: elasticsearch:7.17.21 #8.14.0
+    restart: always
+    ports:
+      - "9201:9200"
+    expose:
+      - 9200  
+    environment:
+      discovery.type: single-node
+      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+      ELASTIC_USERNAME: "admin"
+      ELASTIC_PASSWORD: "admin"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    networks:
+      - elasticsearchnetwork     
+
+volumes:
+  elasticsearch_data:
+
+networks:
+  elasticsearchnetwork:

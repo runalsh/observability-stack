@@ -1,3 +1,9 @@
+include:
+  - docker-compose.agents.yaml
+  - docker-compose.override.yaml
+#  - ./opensearch/docker-compose.opensearch.yaml
+  - ./elasticsearch/docker-compose.elasticsearch.yaml
+
 x-logging:
       &default-logging
       driver: "json-file"
@@ -568,13 +574,14 @@ services:
     logging: *default-logging 
 
   log-generator-apache:
-    build:
-      context: ./log-generator
-      dockerfile: Dockerfile
-      tags:
-        - "runalsh/log-generator:latest"
+    # build:
+    #   context: ./log-generator
+    #   dockerfile: Dockerfile
+    #   tags:
+    #     - "runalsh/log-generator:latest"
+    image: runalsh/log-generator:latest
     volumes:
-      - ./log-generator:/var/log-generator:ro
+      - ./etc/log-generator:/etc/log-generator:ro
       - log-generator_data:/var/log/log-generator-apache
     networks:
       - observability    
@@ -594,12 +601,7 @@ services:
       - observability
     volumes:
       - flog_data:/var/log/flog
-    # logging:
-    #   driver: fluentd
-    #   options:
-    #     mode: non-blocking
-    #     fluentd-async-connect: "true"
-    #     fluentd-sub-second-precision: "true"
+    logging: *default-logging
 
   # telemetrygen:
   #   build:

@@ -1,0 +1,77 @@
+services:
+
+  opensearch:
+    image: opensearchproject/opensearch:1.3.17
+    container_name: opensearch
+    environment:
+      # - OPENSEARCH_INITIAL_ADMIN_PASSWORD=@L0dIcq&7gn44GTH #default = admin
+      - cluster.name=opensearch-cluster
+      - node.name=opensearch
+      - discovery.seed_hosts=opensearch
+      - cluster.initial_master_nodes=opensearch
+      - bootstrap.memory_lock=true # along with the memlock settings below, disables swapping
+      - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m" # minimum and maximum Java heap size, recommend setting both to 50% of system RAM
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    volumes:
+      - opensearch_data:/usr/share/opensearch/data
+    ports:
+      - 9200:9200
+      - 9600:9600
+    networks:
+      - opensearchnetwork
+
+  filebeat-os:
+    image: elastic/filebeat:7.17.21
+    container_name: filebeat-os
+    restart: unless-stopped
+    command: filebeat -e -strict.perms=false
+    volumes:
+      - ./filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      - flog_data:/logs/flog_data:ro
+      - log-generator_data:/logs/log-generator_data:ro
+    networks:
+      - opensearchnetwork
+
+  logstash-os:
+    container_name: logstash-os
+    image: opensearchproject/logstash-oss-with-opensearch-output-plugin:8.9.0
+    restart: always
+    ports:
+      - "5001:5001"
+    environment:
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+    volumes:
+      - type: bind
+        source: ./logstash.yml
+        target: /usr/share/logstash/config/logstash.yml
+        read_only: true
+      - type: bind
+        source: ./logstash-os.conf
+        target: /usr/share/logstash/pipeline/logstash.conf
+        read_only: true
+    networks:
+      - opensearchnetwork
+
+  opensearch-dashboards:
+    image: opensearchproject/opensearch-dashboards:1.3.17
+    container_name: opensearch-dashboards
+    ports:
+      - 5601:5601
+    expose:
+      - "5601"
+    environment:
+      OPENSEARCH_HOSTS: '["https://opensearch:9200"]'
+    networks:
+      - opensearchnetwork
+
+volumes:
+  opensearch_data:
+
+networks:
+  opensearchnetwork:

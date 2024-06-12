@@ -15,7 +15,7 @@ Contain:
       Storage: minio (save metrics and logs)
       SEC: keycloak
 
-      Full stacks: ELK, OLOD (Opensearch+Logstash-os+Opensearch-Dashboard), OLOD+ (OLOD+Filebeat+Kafka)
+      Full stacks: ELK/EFK, OLOD (Opensearch+Logstash-os+Opensearch-Dashboard), ELK+ (ELK+Filebeat+Kafka)
       
       Log generation: flog, log-generator (apache, from pip)
 

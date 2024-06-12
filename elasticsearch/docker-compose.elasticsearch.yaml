@@ -38,7 +38,7 @@ services:
         read_only: true
 
   filebeat-es:
-    image: elastic/filebeat:7.17.21
+    image: elastic/filebeat:8.14.1
     container_name: filebeat-es
     restart: unless-stopped
     command: filebeat -e -strict.perms=false

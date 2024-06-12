@@ -2,7 +2,7 @@ include:
   - docker-compose.agents.yaml
   - docker-compose.override.yaml
 #  - ./opensearch/docker-compose.opensearch.yaml
-#  - ./elasticsearch/docker-compose.elasticsearch.yaml
+# - ./elasticsearch/docker-compose.elasticsearch.yaml
 
 x-logging:
       &default-logging

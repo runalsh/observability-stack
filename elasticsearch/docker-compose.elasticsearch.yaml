@@ -82,7 +82,7 @@ services:
 
   zookeeper:
     container_name: zookeeper
-    image: gcr.io/iguazio/zookeeper
+    image: zookeeper:3.9.2
     ports:
       - "2181:2181"
     networks:
@@ -90,24 +90,54 @@ services:
     deploy:
       replicas: $zookeeper   
 
-  kafka:
-    image: gcr.io/iguazio/kafka
-    container_name: kafka
+  kafka1:
+    image: confluentinc/cp-kafka:7.6.1
+    container_name: kafka1
     ports:
-      - "9092:9092"
+      - 9091:9091
+      - 19091:19091
+      - 9991:9991
     environment:
-      KAFKA_ADVERTISED_HOST_NAME: kafka
+      KAFKA_ADVERTISED_HOST_NAME: kafka1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_HEAP_OPTS: "-Xmx256M -Xms256M"
+      KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_EXTERNAL://kafka1:9091,LISTENER_DOCKER_INTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:19091
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_DOCKER_INTERNAL
+      KAFKA_BROKER_ID: 1
+      CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: kafka1:9091
+      CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
+      CONNECT_CONFLUENT_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_DEFAULT_REPLICATION_FACTOR: 1
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      CONFLUENT_METRICS_ENABLE: 'false'
+      KAFKA_JMX_PORT: 9991
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - kafka_data:/var/lib/kafka/data  
+      - kafka1_data:/var/lib/kafka/data  
     depends_on:
       - zookeeper
     networks:
       - elasticsearchnetwork
     deploy:
-      replicas: $kafka   
+      replicas: $kafka1   
+
+  jmx-kafka1:
+    image: sscaling/jmx-prometheus-exporter:0.12.0
+    ports:
+     - "5556:5556"
+    environment:
+     CONFIG_YML : "/etc/jmx_exporter/config.yml"
+    volumes:
+     - ./jmx_exporter1.yml:/etc/jmx_exporter/config.yml
+    container_name: jmx-kafka1
+    networks:
+      - elasticsearchnetwork
+    depends_on:
+     - kafka1
+    deploy:
+      replicas: $jmxkafka1
 
   kafdrop:
     container_name: kafdrop
@@ -115,45 +145,20 @@ services:
     ports:
       - "9095:9000"
     environment:
-      KAFKA_BROKERCONNECT: kafka:9092
+      KAFKA_BROKERCONNECT: kafka1:9091
       JVM_OPTS: "-Xms64M -Xmx64M"
       SERVER_SERVLET_CONTEXTPATH: "/"
     depends_on:
-      - kafka
+      - kafka1
     networks:
       - elasticsearchnetwork
     deploy:
-      replicas: $kafdrop   
-
-  kafka-map:
-    image: hylink/kafka-map:1.3.3
-    container_name: kafka-map
-    restart: unless-stopped
-    volumes:
-      - kafka-map_data:/usr/local/kafka-map/data
-    environment:
-      DEFAULT_USERNAME: admin
-      DEFAULT_PASSWORD: admin
-    ports:                             
-      - "9006:8080"
-    depends_on:                       
-      - kafka
-      # - kafka-2
-      # - kafka-3
-      # - kafka-broker
-    # links: 
-    #   - kafka-1
-    #   - kafka-2
-    #   - kafka-3
-    networks:
-      - elasticsearchnetwork
-    deploy:
-      replicas: $kafkamap   
+      replicas: $kafdrop
 
 volumes:
   elasticsearch_data:
   kafka-map_data:
-  kafka_data:
+  kafka1_data:
 
 networks:
   elasticsearchnetwork:

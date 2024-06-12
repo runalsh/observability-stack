@@ -20,7 +20,7 @@ processors:
 
 output.kafka:
   enabled: true
-  hosts: ["kafka:9092"]
+  hosts: ["kafka1:9091"]
   topic: filebeat-elk  #-%{[fields.topic]}
   worker: 2
   keep_alive: 60

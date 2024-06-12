@@ -17,7 +17,7 @@ Contain:
       
       Log generation: flog, log-generator (apache, from pip)
 
-      Other: watchtower, tailscale, zerotier, certbot, angie, caddy, postgres, docker socket proxy
+      Other: watchtower, tailscale, zerotier, certbot, angie, caddy, postgres, portainer + docker socket proxy
 
 TODO:
 

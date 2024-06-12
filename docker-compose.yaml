@@ -42,6 +42,12 @@ networks:
     ipam:
       config:
         - subnet: 172.16.10.0/24
+  dockerproxynet:
+   name: dockerproxynet
+   ipam:
+    config:
+      - subnet: 172.16.11.0/24
+
 volumes:
     prometheus_data: 
     grafana_data: 
@@ -56,6 +62,7 @@ volumes:
     angie_data:
     log-generator_data:
     flog_data:
+    portainer_data:
 
 services:
 
@@ -494,7 +501,6 @@ services:
       - MINIO_COMPRESSION_MIME_TYPES="text/*,application/json,application/xml"
       - MINIO_ACCESS_KEY=s3accesskey
       - MINIO_SECRET_KEY=s3accesskey
-
     entrypoint:
       - sh
       - -euc
@@ -604,45 +610,64 @@ services:
   #     - --rate=100
   #     - --duration=10h
 
- # dockerproxy:
-  #   image: tecnativa/docker-socket-proxy:0.1.2
-  #   restart: always
-  #   container_name: dockerproxy
-  #   networks:
-  #     - observability
-  #   volumes:
-  #     - /var/run/docker.sock:/var/run/docker.sock:ro
-  #   environment:
-  #     LOG_LEVEL: info
-  #     # 0 to revoke access / 1 to grant access.
-  #     ## Granted by Default
-  #     EVENTS: 1
-  #     PING: 1
-  #     VERSION: 1
-  #     ## Revoked by Default
-  #     # Security critical
-  #     AUTH: 0
-  #     SECRETS: 0
-  #     # Not always needed
-  #     BUILD: 0
-  #     COMMIT: 0
-  #     CONFIGS: 0
-  #     CONTAINERS: 1 # Traefik, portainer, etc.
-  #     DISTRIBUTION: 0
-  #     EXEC: 0
-  #     IMAGES: 1 # Portainer
-  #     INFO: 1 # Portainer
-  #     NETWORKS: 1 # Portainer
-  #     NODES: 0
-  #     PLUGINS: 0
-  #     SERVICES: 1 # Portainer
-  #     SESSION: 0
-  #     SWARM: 0
-  #     SYSTEM: 0
-  #     TASKS: 1 # Portainer
-  #     VOLUMES: 1 # Portainer
+  dockerproxy:
+    image: tecnativa/docker-socket-proxy:0.1.2
+    restart: always
+    container_name: dockerproxy
+    networks:
+      - dockerproxynet
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      LOG_LEVEL: info
+      # 0 to revoke access / 1 to grant access.
+      ## Granted by Default
+      EVENTS: 1
+      PING: 1
+      VERSION: 1
+      ## Revoked by Default
+      # Security critical
+      AUTH: 0
+      SECRETS: 0
+      # Not always needed
+      BUILD: 0
+      COMMIT: 0
+      CONFIGS: 0
+      CONTAINERS: 1 # Traefik, portainer, etc.
+      DISTRIBUTION: 0
+      EXEC: 0
+      IMAGES: 1 # Portainer
+      INFO: 1 # Portainer
+      NETWORKS: 1 # Portainer
+      NODES: 0
+      PLUGINS: 0
+      SERVICES: 1 # Portainer
+      SESSION: 0
+      SWARM: 0
+      SYSTEM: 0
+      TASKS: 1 # Portainer
+      VOLUMES: 1 # Portainer
 
-
+  portainer:
+    image: portainer/portainer-ce:2.20.3-alpine
+    restart: unless-stopped
+    container_name: portainer
+    networks:
+      - dockerproxynet
+    command: ["-H", "tcp://dockerproxy:2375", "--tlsskipverify", "--admin-password", "$$2y$$05$$kvClGmhatZIlunYz332q2ebJKEFSeEdwwRL2BDnbfebJvOHC7GUTy"] #admin : admin
+    healthcheck:
+      test: "wget --no-verbose --tries=1 --spider --no-check-certificate http://localhost:9000 || exit 1"
+      interval: 60s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    ports:
+      - 9000:9000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - portainer_data:/data
+    depends_on:
+      - dockerproxy
 
 
 

@@ -63,6 +63,7 @@ volumes:
     log-generator_data:
     flog_data:
     portainer_data:
+    zerotier_data:
 
 services:
 
@@ -349,27 +350,27 @@ services:
 
   # zerotier:
   #   image: zerotier/zerotier:1.14.0
-   #   container_name: zerotier
+  #   container_name: zerotier
   #   restart: always
   #   volumes:
-  #     - ./etc/zerotier/zerotier-one:/var/lib/zerotier-one
-  #     - ./etc/zerotier/config:/data/config
-  #     - ./service.d/zerotier:/service.d
+  #     - zerotier_data:/var/lib/zerotier-one
+  #     # - ./etc/zerotier/zerotier-one:/var/lib/zerotier-one
+  #     # - ./etc/zerotier/config:/data/config
+  #     # - ./service.d/zerotier:/service.d
   #   cap_drop:
   #     - NET_RAW
   #     - NET_ADMIN
   #     - SYS_ADMIN
   #   devices:
-    # environment:
-      # - ZEROTIER_API_SECRET=${ZEROTIER_API_SECRET}
-      # - ZEROTIER_IDENTITY_PUBLIC=${ZEROTIER_IDENTITY_PUBLIC}
-      # - ZEROTIER_IDENTITY_SECRET=${ZEROTIER_IDENTITY_SECRET}
   #     - /dev/net/tun
-  #   privileged: true
-  #   network_mode: host
-  # networks:
+  #   # environment:
+  #   #   - ZEROTIER_API_SECRET=${ZEROTIER_API_SECRET}
+  #   #   - ZEROTIER_IDENTITY_PUBLIC=${ZEROTIER_IDENTITY_PUBLIC}
+  #   #   - ZEROTIER_IDENTITY_SECRET=${ZEROTIER_IDENTITY_SECRET}
+  #   command: "${ZEROTIER_NETWORK_ID}"
+  #   networks:
   #     - observability
-    # logging: *default-logging 
+  #   logging: *default-logging 
 
   # vmalert:
   #   container_name: vmalert

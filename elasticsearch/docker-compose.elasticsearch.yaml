@@ -15,7 +15,9 @@ services:
         target: /usr/share/kibana/config/kibana.yml
         read_only: true
     networks:
-      - elasticsearchnetwork    
+      - elasticsearchnetwork 
+    deploy:
+      replicas: $kibana      
 
   logstash-es:
     container_name: logstash-es
@@ -36,6 +38,8 @@ services:
         source: ./logstash-es.conf
         target: /usr/share/logstash/pipeline/logstash.conf
         read_only: true
+    deploy:
+      replicas: $logstashes     
 
   filebeat-es:
     image: elastic/filebeat:7.17.21
@@ -48,6 +52,9 @@ services:
       - log-generator_data:/logs/log-generator_data:ro
     networks:
       - elasticsearchnetwork
+    deploy:
+      replicas: $filebeates  
+
 
   elasticsearch:
     container_name: elasticsearch
@@ -69,7 +76,9 @@ services:
     volumes:
       - elasticsearch_data:/usr/share/elasticsearch/data
     networks:
-      - elasticsearchnetwork     
+      - elasticsearchnetwork  
+    deploy:
+      replicas: $elasticsearch      
 
   zookeeper:
     container_name: zookeeper
@@ -78,6 +87,8 @@ services:
       - "2181:2181"
     networks:
       - elasticsearchnetwork
+    deploy:
+      replicas: $zookeeper   
 
   kafka:
     image: gcr.io/iguazio/kafka
@@ -95,6 +106,8 @@ services:
       - zookeeper
     networks:
       - elasticsearchnetwork
+    deploy:
+      replicas: $kafka   
 
   kafdrop:
     container_name: kafdrop
@@ -109,6 +122,8 @@ services:
       - kafka
     networks:
       - elasticsearchnetwork
+    deploy:
+      replicas: $kafdrop   
 
   kafka-map:
     image: hylink/kafka-map:1.3.3
@@ -132,6 +147,8 @@ services:
     #   - kafka-3
     networks:
       - elasticsearchnetwork
+    deploy:
+      replicas: $kafkamap   
 
 volumes:
   elasticsearch_data:

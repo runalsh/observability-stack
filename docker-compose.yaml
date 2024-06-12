@@ -4,11 +4,44 @@ x-logging:
       options:
           max-size: "200k"
           max-file: "10"
+
+# x-logging: &x-logging
+#   logging:
+#     driver: loki
+#     options:
+#       loki-url: "http://loki:3100/loki/api/v1/push"
+#       loki-retries: "5"
+#       loki-batch-size: "400"
+#       loki-external-labels: service={{.Name}}
+#   labels:
+#     logging: "promtail"
+#     logging_jobname: "containerlogs"
+
+# x-common: &x-common
+#   <<: *x-logging
+#   privileged: false
+#   volumes:
+#     - /etc/localtime:/etc/localtime:ro
+#   security_opt:
+#     - no-new-privileges=true
+#   tmpfs:
+#     - /tmp:rw,noexec,nosuid,size=32m
+#   ulimits:
+#     nproc: 6144
+#     nofile:
+#       soft: 6000
+#       hard: 12000
+
+# <<: *x-common
+
 networks:
   observability:
     # external: true
     driver: bridge
-
+    name: observability
+    ipam:
+      config:
+        - subnet: 172.16.10.0/24
 volumes:
     prometheus_data: 
     grafana_data: 
@@ -571,6 +604,43 @@ services:
   #     - --rate=100
   #     - --duration=10h
 
+ # dockerproxy:
+  #   image: tecnativa/docker-socket-proxy:0.1.2
+  #   restart: always
+  #   container_name: dockerproxy
+  #   networks:
+  #     - observability
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock:ro
+  #   environment:
+  #     LOG_LEVEL: info
+  #     # 0 to revoke access / 1 to grant access.
+  #     ## Granted by Default
+  #     EVENTS: 1
+  #     PING: 1
+  #     VERSION: 1
+  #     ## Revoked by Default
+  #     # Security critical
+  #     AUTH: 0
+  #     SECRETS: 0
+  #     # Not always needed
+  #     BUILD: 0
+  #     COMMIT: 0
+  #     CONFIGS: 0
+  #     CONTAINERS: 1 # Traefik, portainer, etc.
+  #     DISTRIBUTION: 0
+  #     EXEC: 0
+  #     IMAGES: 1 # Portainer
+  #     INFO: 1 # Portainer
+  #     NETWORKS: 1 # Portainer
+  #     NODES: 0
+  #     PLUGINS: 0
+  #     SERVICES: 1 # Portainer
+  #     SESSION: 0
+  #     SWARM: 0
+  #     SYSTEM: 0
+  #     TASKS: 1 # Portainer
+  #     VOLUMES: 1 # Portainer
 
 
 

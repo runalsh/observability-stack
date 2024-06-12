@@ -2,7 +2,7 @@ services:
 
   kibana:
     container_name: kibana
-    image: kibana:7.17.21 #8.14.0
+    image: kibana:8.14.0 #8.14.0
     restart: always
     ports:
       - "5602:5601"

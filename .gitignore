@@ -2,3 +2,4 @@
 real
 etc/grafana/plugins
 LABS/kafka/data
+LABS/kafka-wo-zoo/data

@@ -16,8 +16,10 @@ Contain:
       Full stacks: ELK/EFK, OLOD (Opensearch+Logstash-os+Opensearch-Dashboard), 
             ELK+ (ELK+Filebeat+Kafka)
 
-      LABS: kafka lab (producer py + consumer py + 3 kafka (w zookeeper) + jwt + prometheus + grafana), 
-            kafka lab without zookeeper
+      LABS: ./LABS/kafka - kafka lab (producer py + consumer py + 3 kafka (w zookeeper) + jwt + prometheus + grafana)
+            (producer2.py write json messages to kafka and kafka connect write it to postgres, you can see
+            messages from kafka in kafdrop or using consumer.py)
+            ./LABS/kafka-wo-zoo - kafka lab without zookeeper and using bitnami images
       
       Log generation: flog, log-generator (apache, from pip)
 

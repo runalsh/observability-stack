@@ -17,7 +17,7 @@ Contain:
             ELK+ (ELK+Filebeat+Kafka)
 
       LABS:
-          ./LABS/kafka - Kafka lab (producer + consumer+ 3 Kafka (with Zookeeper)+JWT+Prometheus+Grafana)
+          ./LABS/kafka - Kafka lab (producer + consumer+ 3 Kafka + JWT + Prometheus + Grafana)
         producer2.py writes JSON messages to Kafka and Kafka Connect writes them to Postgres. 
         You can see messages from Kafka in Kafdrop or using consumer.py.
           ./LABS/kafka-wo-zoo - Kafka lab without Zookeeper, using Bitnami images

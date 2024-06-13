@@ -15,11 +15,13 @@ Contain:
       Storage: minio (save metrics and logs)
       SEC: keycloak
 
-      Full stacks: ELK/EFK, OLOD (Opensearch+Logstash-os+Opensearch-Dashboard), ELK+ (ELK+Filebeat+Kafka)
+      Full stacks: ELK/EFK, OLOD (Opensearch+Logstash-os+Opensearch-Dashboard), 
+            ELK+ (ELK+Filebeat+Kafka)
       
       Log generation: flog, log-generator (apache, from pip)
 
-      Other: watchtower, tailscale, zerotier, certbot, angie, caddy, postgres, portainer + docker socket proxy
+      Other: watchtower, tailscale, zerotier, certbot, angie, caddy, postgres, 
+            portainer + docker socket proxy
 
 TODO:
 

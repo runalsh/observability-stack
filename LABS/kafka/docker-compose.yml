@@ -111,7 +111,7 @@ services:
       CONNECT_REST_PORT: 8083
       CONNECT_PLUGIN_PATH: /usr/share/java,/etc/kafka-connect/jars
     volumes:
-      - ./kafka-connect-jars:/etc/kafka-connect/jars
+      - ./data/kafka-connect-jars:/etc/kafka-connect/jars
       - ./kafka-jdbc-sink.json:/etc/kafka-connect/kafka-jdbc-sink.json
     command:
       - bash

@@ -1,5 +1,5 @@
-time
 datetime
 kafka-python
-
-
+schedule
+aiokafka
+Faker

@@ -16,7 +16,8 @@ Contain:
       Full stacks: ELK/EFK, OLOD (Opensearch+Logstash-os+Opensearch-Dashboard), 
             ELK+ (ELK+Filebeat+Kafka)
 
-      LABS: kafka lab (producer py + consumer py + 3 kafka (w zookeeper) + jwt + prometheus + grafana), kafka lab without zookeeper
+      LABS: kafka lab (producer py + consumer py + 3 kafka (w zookeeper) + jwt + prometheus + grafana), 
+            kafka lab without zookeeper
       
       Log generation: flog, log-generator (apache, from pip)
 

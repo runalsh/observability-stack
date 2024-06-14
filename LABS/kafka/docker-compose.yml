@@ -79,6 +79,10 @@ services:
     volumes:
       - ./data/postgres_data:/var/lib/postgresql/data
       - ./postgres-init.sql:/docker-entrypoint-initdb.d/postgres-init.sql
+    # command: #for debezium
+    #   - "postgres"
+    #   - "-c"
+    #   - "wal_level=logical"  
 
   pgadmin:
     container_name: pgadmin
@@ -108,8 +112,24 @@ services:
       CONNECT_VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter
       CONNECT_INTERNAL_KEY_CONVERTER: org.apache.kafka.connect.json.JsonConverter
       CONNECT_INTERNAL_VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+      # CONNECT_KEY_CONVERTER_SCHEMAS_ENABLE: "false"
+      # CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE: "false"
       CONNECT_REST_PORT: 8083
-      CONNECT_PLUGIN_PATH: /usr/share/java,/etc/kafka-connect/jars
+      CONNECT_JDBC_DRIVER_CLASS: org.postgresql.Driver
+      CONNECT_JDBC_URL: jdbc:postgresql://postgres:5432/db
+      CONNECT_JDBC_USER: postgres
+      CONNECT_JDBC_PASSWORD: postgres
+      CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL: 'http://kafka-schema-registry:8081'
+      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: 'http://kafka-schema-registry:8081'
+      CONNECT_POSTGRES_HOST: postgres
+      CONNECT_POSTGRES_PORT: 5432
+      CONNECT_POSTGRES_USER: postgres
+      CONNECT_POSTGRES_PASSWORD: postgres
+      CONNECT_POSTGRES_DATABASE: db
+      CONNECT_POSTGRES_SCHEMA: public
+      CONNECT_POSTGRES_TABLE: people
+    #  CONNECT_LOG4J_ROOT_LOGLEVEL: DEBUG
+      CONNECT_PLUGIN_PATH: /usr/share/java,/etc/kafka-connect/jars,/usr/share/confluent-hub-components
     volumes:
       - ./data/kafka-connect-jars:/etc/kafka-connect/jars
       - ./kafka-jdbc-sink.json:/etc/kafka-connect/kafka-jdbc-sink.json
@@ -121,26 +141,123 @@ services:
         confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:latest
         echo "Starting Kafka Connect"
         /etc/confluent/docker/run &
-        sleep 30
+        echo "Waiting for Kafka Connect to start listening on localhost:8083 ⏳"
+        while : ; do
+            curl_status=$$(curl -s -o /dev/null -w %{http_code} http://localhost:8083/connectors)
+            echo -e $$(date) " Kafka Connect listener HTTP state: " $$curl_status " (waiting for 200)"
+            if [ $$curl_status -eq 200 ] ; then
+            break
+            fi
+            sleep 5
+        done
         echo "Creating Kafka JDBC Sink Connector"
         curl -X POST -H "Content-Type: application/json" --data @/etc/kafka-connect/kafka-jdbc-sink.json http://localhost:8083/connectors
+        # /etc/confluent/docker/run &
         wait
 
+  kafka-schema-registry:
+    image: confluentinc/cp-schema-registry
+    hostname: kafka-schema-registry
+    container_name: kafka-schema-registry
+    ports:
+      - '8081:8081'
+    environment:
+      SCHEMA_REGISTRY_HOST_NAME: kafka-schema-registry
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: kafka1:19091
+      SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
+
+  redpanda-console:
+    container_name: redpanda-console
+    image: docker.redpanda.com/redpandadata/console
+    entrypoint: /bin/sh
+    command: -c 'echo "$$CONSOLE_CONFIG_FILE" > /tmp/config.yml; /app/console'
+    environment:
+      CONFIG_FILEPATH: /tmp/config.yml
+      CONSOLE_CONFIG_FILE: |
+        kafka:
+          brokers: ["kafka1:19091"]
+          schemaRegistry:
+            enabled: true
+            urls: ["http://kafka-schema-registry:8081"]
+        connect:
+          enabled: true
+          clusters:
+            - name: connect
+              url: "http://kafka-connect:8083/"
+    ports:
+      - 8080:8080
+    restart: unless-stopped
+
+  akhq:
+    image: tchiotludo/akhq
+    environment:
+      AKHQ_CONFIGURATION: |
+        akhq:
+          connections:
+            docker-kafka-server:
+              properties:
+                bootstrap.servers: 'kafka1:19091'
+              schema-registry:
+                url: 'http://kafka-schema-registry:8081'
+              connect:
+                - name: "raw-pg-sink"
+                  url: "http://kafka-connect:8083/"
+    ports:
+      - 8084:8080            
+
+  # debezium:
+  #   image: debezium/connect:latest
+  #   container_name: debezium
+  #   hostname: debezium
+  #   ports:
+  #     - '8093:8083'
+  #   environment:
+  #     BOOTSTRAP_SERVERS: kafka1:19091
+  #     CONNECT_REST_ADVERTISED_HOST_NAME: debezium
+  #     GROUP_ID: 1
+  #     CONFIG_STORAGE_TOPIC: connect_configs
+  #     STATUS_STORAGE_TOPIC: connect_statuses
+  #     OFFSET_STORAGE_TOPIC: connect_offsets
+  #     KEY_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+  #     VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+  #     ENABLE_DEBEZIUM_SCRIPTING: 'true'
+  #   healthcheck:
+  #     test:
+  #       [ 'CMD', 'curl', '--silent', '--fail', '-X', 'GET', 'http://localhost:8083/connectors', ]
+  #     start_period: 10s
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5  
+
+  # debezium-ui:
+  #   image: debezium/debezium-ui:latest
+  #   container_name: debezium-ui
+  #   hostname: debezium-ui
+  #   depends_on:
+  #     debezium:
+  #       condition: service_healthy
+  #   ports:
+  #     - '8080:8080'
+  #   environment:
+  #     KAFKA_CONNECT_URIS: http://debezium:8083
+
   zookeeper:
-    image: zookeeper:3.4.9
+    image: confluentinc/cp-zookeeper:7.6.1
     hostname: zookeeper
+    container_name: zookeeper
     ports:
       - "2181:2181"
     environment:
       ZOO_MY_ID: 1
       ZOO_PORT: 2181
       ZOO_SERVERS: server.1=zookeeper:2888:3888
+      ZOOKEEPER_CLIENT_PORT: 2181 
     volumes:
       - ./data/zookeeper/data:/data
       - ./data/zookeeper/datalog:/datalog
 
   kafka1:
-    image: confluentinc/cp-kafka:5.3.0
+    image: confluentinc/cp-kafka:7.6.1
     hostname: kafka1
     ports:
       - "9091:9091"
@@ -151,19 +268,25 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_DOCKER_INTERNAL
       KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+      ZOOKEEPER_SASL_ENABLED: false
       KAFKA_BROKER_ID: 1
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: kafka1:19091
       CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
       CONFLUENT_METRICS_ENABLE: 'false'
       KAFKA_JMX_PORT: 9991
+      KAFKA_JMX_HOSTNAME: ${DOCKER_HOST_IP:-127.0.0.1}
+      KAFKA_AUTHORIZER_CLASS_NAME: kafka.security.authorizer.AclAuthorizer
+      KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: "true"
     volumes:
       - ./data/kafka1/data:/var/lib/kafka/data
     depends_on:
       - zookeeper
 
   kafka2:
-    image: confluentinc/cp-kafka:5.3.0
+    image: confluentinc/cp-kafka:7.6.1
     hostname: kafka2
     ports:
       - "9092:9092"
@@ -184,7 +307,7 @@ services:
       - zookeeper 
 
   kafka3:
-    image: confluentinc/cp-kafka:5.3.0
+    image: confluentinc/cp-kafka:7.6.1
     hostname: kafka3
     ports:
       - 9093:9093

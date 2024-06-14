@@ -3,3 +3,4 @@ kafka-python
 schedule
 aiokafka
 Faker
+psycopg2

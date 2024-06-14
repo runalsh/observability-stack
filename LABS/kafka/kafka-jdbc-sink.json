@@ -10,10 +10,15 @@
       "insert.mode": "insert",
       "auto.create": "true",
       "auto.evolve": "true",
+      "pk.mode": "none",
+      "pk.fields": "id",
+      "table.name.format": "people",
       "key.converter": "org.apache.kafka.connect.json.JsonConverter",
       "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+      "schema.registry.url": "http://kafka-schema-registry:8081",
       "key.converter.schemas.enable": "false",
-      "value.converter.schemas.enable": "false"
+      "value.converter.schemas.enable": "true",
+      "errors.log.include.messages": "true"
     }
   }
   

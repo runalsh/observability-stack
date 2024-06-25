@@ -277,7 +277,7 @@ services:
       replicas: $victorialogs
 
   grafana:
-    image: grafana/grafana:11.0.0
+    image: grafana/grafana:11.1.0
     container_name: grafana
     entrypoint: [ "/bin/bash", "-c" ]
     command: [ "/etc/grafana/download.sh && /run.sh" ]
@@ -655,14 +655,20 @@ services:
 
   telemetrygen:
     container_name: telemetrygen
-    build:
-      context: ./etc/telemetrygen/
-    command:
-      - traces
-      - --otlp-endpoint=otecollector:4317
-      - --otlp-insecure
-      - --rate=100
-      - --duration=10h
+    image: otel/opentelemetry-collector:0.103.1
+    ports:
+      - 4317:4317
+      - 4318:4318
+      - 55690:55690
+      - 8889:8889
+    volumes:
+      - ./etc/telemetrygen/config.yaml:/etc/otel-collector-config.yaml # https://opentelemetry.io/docs/collector/configuration/
+    # command: ["--config=/etc/otel-collector-config.yaml"]  
+    # command:
+    #   - traces
+    #   - --otlp-insecure
+    #   - --rate=100
+    #   - --duration=10h
     deploy:
       replicas: $telemetrygen
 

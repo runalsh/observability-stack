@@ -264,7 +264,7 @@ services:
 
   victorialogs:
     container_name: victorialogs
-    image: docker.io/victoriametrics/victoria-logs:v0.20.2-victorialogs
+    image: docker.io/victoriametrics/victoria-logs:v0.22.0-victorialogs
     command:
       - '--storageDataPath=/var/lib/victorialogs'
       - '--loggerFormat=json'

@@ -1,7 +1,7 @@
 services:
 
   prometheus:
-    image: prom/prometheus:v2.53.0
+    image: prom/prometheus:v2.52.0
     hostname: prometheus
     ports:
      - "9090:9090"
@@ -93,6 +93,8 @@ services:
       PGADMIN_DEFAULT_PASSWORD: pgadmin
     ports:
       - "5050:80"
+      
+ #https://github.com/lithiferous/kstream-agg-rs/blob/main/docker-compose.yaml
 
   kafka-connect:
     image: confluentinc/cp-kafka-connect:latest
@@ -115,19 +117,19 @@ services:
       # CONNECT_KEY_CONVERTER_SCHEMAS_ENABLE: "false"
       # CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE: "false"
       CONNECT_REST_PORT: 8083
-      CONNECT_JDBC_DRIVER_CLASS: org.postgresql.Driver
-      CONNECT_JDBC_URL: jdbc:postgresql://postgres:5432/db
-      CONNECT_JDBC_USER: postgres
-      CONNECT_JDBC_PASSWORD: postgres
-      CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL: 'http://kafka-schema-registry:8081'
-      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: 'http://kafka-schema-registry:8081'
-      CONNECT_POSTGRES_HOST: postgres
-      CONNECT_POSTGRES_PORT: 5432
-      CONNECT_POSTGRES_USER: postgres
-      CONNECT_POSTGRES_PASSWORD: postgres
-      CONNECT_POSTGRES_DATABASE: db
-      CONNECT_POSTGRES_SCHEMA: public
-      CONNECT_POSTGRES_TABLE: people
+      # CONNECT_JDBC_DRIVER_CLASS: org.postgresql.Driver
+      # CONNECT_JDBC_URL: jdbc:postgresql://postgres:5432/db
+      # CONNECT_JDBC_USER: postgres
+      # CONNECT_JDBC_PASSWORD: postgres
+      # CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL: 'http://kafka-schema-registry:8081'
+      # CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: 'http://kafka-schema-registry:8081'
+      # CONNECT_POSTGRES_HOST: postgres
+      # CONNECT_POSTGRES_PORT: 5432
+      # CONNECT_POSTGRES_USER: postgres
+      # CONNECT_POSTGRES_PASSWORD: postgres
+      # CONNECT_POSTGRES_DATABASE: db
+      # CONNECT_POSTGRES_SCHEMA: public
+      # CONNECT_POSTGRES_TABLE: people
     #  CONNECT_LOG4J_ROOT_LOGLEVEL: DEBUG
       CONNECT_PLUGIN_PATH: /usr/share/java,/etc/kafka-connect/jars,/usr/share/confluent-hub-components
     volumes:

@@ -1,6 +1,6 @@
 include:
-  - docker-compose.agents.yaml
-  - docker-compose.override.yaml
+  - docker-compose.agents.yml
+  - docker-compose.override.yml
 #  - ./opensearch/docker-compose.opensearch.yaml
 # - ./elasticsearch/docker-compose.elasticsearch.yaml
 
@@ -48,11 +48,6 @@ networks:
     ipam:
       config:
         - subnet: 172.16.10.0/24
-  dockerproxynet:
-   name: dockerproxynet
-   ipam:
-    config:
-      - subnet: 172.16.11.0/24
 
 volumes:
     prometheus_data: 
@@ -70,6 +65,7 @@ volumes:
     flog_data:
     portainer_data:
     zerotier_data:
+    tailscale_data:
 
 services:
 
@@ -353,12 +349,12 @@ services:
       replicas: $watchtower
 
   tailscale:
-    privileged: true                                     # This will become the tailscale device name
+    privileged: true
     container_name: tailscale
     image: tailscale/tailscale:v1.68.1
     volumes:
-      - "/opt/appdata/tailscale/var_lib:/var/lib"        # State data will be stored in this directory
-      - "/dev/net/tun:/dev/net/tun"                      # Required for tailscale to work
+      - tailscale_data:/var/lib/tailscale
+      - /dev/net/tun:/dev/net/tun                     # Required for tailscale to work
     cap_add:                                               # Required for tailscale to work
       - net_admin
       - sys_module
@@ -366,11 +362,11 @@ services:
       - observability
     command: tailscaled
     environment:
-        - TS_AUTHKEY=bvshbvjhsrbhvjdbhjdvbjhdbjv
+        - TS_AUTHKEY=${TS_AUTHKEY}
         - TS_USERSPACE=true
         - TS_STATE_DIR=/var/lib/tailscale
         - TS_SOCKET=/var/run/tailscale/tailscaled.sock
-        - TS_HOSTNAME=${TS_HOSTNAME}
+        - TS_HOSTNAME=${TS_HOSTNAME:-observindocker}
     restart: unless-stopped
     logging: *default-logging 
     deploy:
@@ -405,16 +401,16 @@ services:
   vmalert:
     container_name: vmalert
     image: victoriametrics/vmalert:v1.101.0
-    depends_on:
-      - "victoriametrics"
-      - "alertmanager"
+    # depends_on:
+    #   - "victoriametrics"
+    #   - "alertmanager"
     ports:
       - 8880:8880
     volumes:
-      - ./alerts.yml:/etc/alerts/alerts.yml
-      - ./alerts-health.yml:/etc/alerts/alerts-health.yml
-      - ./alerts-vmagent.yml:/etc/alerts/alerts-vmagent.yml
-      - ./alerts-vmalert.yml:/etc/alerts/alerts-vmalert.yml
+      - ./etc/vmalert/alerts.yml:/etc/alerts/alerts.yml
+      - ./etc/vmalert/alerts-health.yml:/etc/alerts/alerts-health.yml
+      - ./etc/vmalert/alerts-vmagent.yml:/etc/alerts/alerts-vmagent.yml
+      - ./etc/vmalert/alerts-vmalert.yml:/etc/alerts/alerts-vmalert.yml
     command:
       - "--datasource.url=http://victoriametrics:8428/"
       - "--remoteRead.url=http://victoriametrics:8428/"
@@ -606,6 +602,7 @@ services:
       replicas: $postgres
 
   blackbox-exporter:
+    container_name: blackbox-exporter
     image: bitnami/blackbox-exporter:0.25.0
     volumes:
       - ./etc/blackbox:/etc/blackbox:ro
@@ -656,24 +653,25 @@ services:
     deploy:
       replicas: $flog
 
-  # telemetrygen:
-  #   build:
-  #     context: ../../../cmd/telemetrygen/
-  #   command:
-  #     - traces
-  #     - --otlp-endpoint=otecollector:4317
-  #     - --otlp-insecure
-  #     - --rate=100
-  #     - --duration=10h
-  #   deploy:
-  #     replicas: $telemetrygen
+  telemetrygen:
+    container_name: telemetrygen
+    build:
+      context: ./etc/telemetrygen/
+    command:
+      - traces
+      - --otlp-endpoint=otecollector:4317
+      - --otlp-insecure
+      - --rate=100
+      - --duration=10h
+    deploy:
+      replicas: $telemetrygen
 
   dockerproxy:
     image: tecnativa/docker-socket-proxy:0.1.2
     restart: always
     container_name: dockerproxy
     networks:
-      - dockerproxynet
+      - observability
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
@@ -713,7 +711,7 @@ services:
     restart: unless-stopped
     container_name: portainer
     networks:
-      - dockerproxynet
+      - observability
     command: ["-H", "tcp://dockerproxy:2375", "--tlsskipverify", "--admin-password", "$$2y$$05$$kvClGmhatZIlunYz332q2ebJKEFSeEdwwRL2BDnbfebJvOHC7GUTy"] #admin : admin
     healthcheck:
       test: "wget --no-verbose --tries=1 --spider --no-check-certificate http://localhost:9000 || exit 1"

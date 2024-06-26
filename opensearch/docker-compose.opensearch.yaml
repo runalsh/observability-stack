@@ -1,7 +1,7 @@
 services:
 
   opensearch:
-    image: opensearchproject/opensearch:2.14.0
+    image: opensearchproject/opensearch:2.15.0
     container_name: opensearch
     environment:
       # - OPENSEARCH_INITIAL_ADMIN_PASSWORD=@L0dIcq&7gn44GTH #default = admin

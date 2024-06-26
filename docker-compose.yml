@@ -657,20 +657,36 @@ services:
     container_name: telemetrygen
     image: otel/opentelemetry-collector:0.103.1
     ports:
-      - 4317:4317
-      - 4318:4318
-      - 55690:55690
-      - 8889:8889
+      - "1888:1888"   # pprof extension
+      - "8888:8888"   # Prometheus metrics exposed by the collector
+      - "8889:8889"   # Prometheus exporter metrics
+      - "13133:13133" # health_check extension
+      - "9411"   # Zipkin receiver
+      - "4317:4317"        # OTLP gRPC receiver
+      - "4318:4318" # OTLP/HTTP receiver
+      - "55680:55679" # zpages extension
     volumes:
       - ./etc/telemetrygen/config.yaml:/etc/otel-collector-config.yaml # https://opentelemetry.io/docs/collector/configuration/
-    # command: ["--config=/etc/otel-collector-config.yaml"]  
-    # command:
-    #   - traces
-    #   - --otlp-insecure
-    #   - --rate=100
-    #   - --duration=10h
+    networks:
+      - observability
     deploy:
       replicas: $telemetrygen
+
+  zipkin:
+    image: openzipkin/zipkin:3.4.0
+    container_name: zipkin
+    ports:
+      - '9411:9411'
+    networks:
+      - observability    
+
+  jaeger:
+    image: jaegertracing/all-in-one:1.58.1
+    container_name: jaeger
+    ports:
+      - '16686:16686'
+    networks:
+      - observability  
 
   dockerproxy:
     image: tecnativa/docker-socket-proxy:0.1.2

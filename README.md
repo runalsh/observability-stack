@@ -14,7 +14,7 @@ Contain:
       UI: grafana
       Storage: minio (save metrics and logs)
       SEC: keycloak
-      Log generation: flog, log-generator (apache, from pip)
+      Log generation: flog, log-generator (apache, from pip), otel
       Other: watchtower, tailscale, zerotier, certbot, angie, caddy, postgres, 
             portainer + docker socket proxy
 

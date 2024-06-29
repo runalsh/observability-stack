@@ -7,12 +7,12 @@ Access to services available via overlay networks (Tailscale and ZeroTier).
 Contain:
 
       Metrics aggregation: prometheus, victoriametrics
-      Metrics scrape: vmagent (victoriametrics), pushgateway
-      Logs aggregation: loki, victorialogs
+      Metrics scrape: vmagent (victoriametrics), pushgateway, telegraf
+      Logs aggregation: loki, victorialogs, gatling
       Exporters: node_exporter, cadvizor, blackbox-exporter, promtail
       Aletring: alertmanager, vmalert
       UI: grafana
-      Storage: minio (save metrics and logs)
+      Storage: minio (save metrics and logs), influxdb
       SEC: keycloak
       Log generation: flog, log-generator (apache, from pip), otel
       Other: watchtower, tailscale, zerotier, certbot, angie, caddy, postgres, 

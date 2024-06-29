@@ -8,13 +8,13 @@ Contain:
 
       Metrics aggregation: prometheus, victoriametrics
       Metrics scrape: vmagent (victoriametrics), pushgateway, telegraf
-      Logs aggregation: loki, victorialogs, gatling
+      Logs aggregation: loki, victorialogs
       Exporters: node_exporter, cadvizor, blackbox-exporter, promtail
       Aletring: alertmanager, vmalert
       UI: grafana
       Storage: minio (save metrics and logs), influxdb
       SEC: keycloak
-      Log generation: flog, log-generator (apache, from pip), otel
+      Log generation: flog, log-generator (apache, from pip), otel, gatling, jmeter
       Other: watchtower, tailscale, zerotier, certbot, angie, caddy, postgres, 
             portainer + docker socket proxy
 

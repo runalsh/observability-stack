@@ -722,6 +722,8 @@ services:
       - observability
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
+    ports:
+      - 2375:2375  
     environment:
       LOG_LEVEL: info
       # 0 to revoke access / 1 to grant access.

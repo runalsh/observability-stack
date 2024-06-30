@@ -23,7 +23,7 @@ Contain:
             ./elasticsearch - ELK/EFK and ELK+ (ELK+Filebeat+Kafka)
             Logs from generators are read by Filebeat and sent to Kafka. Logstash
             reads logs from the topic and pushes them to Elasticsearch.
-            ./opensearch - OLOD (Opensearch, Logstas, Opensearch-Dashboard)
+            ./opensearch - OLOD (Opensearch, Logstash, Opensearch-Dashboard)
             
       LABS:
           ./LABS/kafka - Kafka lab (producer + consumer+ 3 Kafka + JWT + Prometheus + Grafana)

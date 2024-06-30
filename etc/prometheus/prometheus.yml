@@ -80,7 +80,7 @@ scrape_configs:
     bearer_token: demotoken
     static_configs:
       - targets:
-        - 'watchtower:8088'
+        - 'watchtower:8080'
 #   - job_name: node_exporter_multi_node
 #     static_configs:
 # {% for n in range(3400) %}
@@ -107,3 +107,13 @@ scrape_configs:
         replacement: blackbox-exporter:9115
       - source_labels: [__param_module]
         target_label: module
+
+  - job_name: 'thanos'
+    static_configs:
+      - targets:
+          - 'thanos-sidecar-1:10902'
+          # - 'thanos-sidecar-2:10902'
+          - 'thanos-querier:10902'
+          - 'thanos-store-gateway:10902'
+          - 'thanos-compactor:10902'
+          - 'thanos-ruler:10902'      

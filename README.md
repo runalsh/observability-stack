@@ -12,9 +12,10 @@ Contain:
       Exporters: node_exporter, cadvizor, blackbox-exporter, promtail
       Aletring: alertmanager, vmalert
       UI: grafana
-      Storage: minio (save metrics and logs), influxdb
+      Storage: minio (save metrics and logs), influxdb, thanos
       SEC: keycloak
-      Log generation: flog, log-generator (apache, from pip), otel, gatling, jmeter
+      Log generation: flog, log-generator (apache, from pip), opentelemetry, gatling, jmeter
+      Traces: jaeger
       Other: watchtower, tailscale, zerotier, certbot, angie, caddy, postgres, 
             portainer + docker socket proxy
 
@@ -32,12 +33,8 @@ Contain:
 
 TODO:
 
-    Thanos
     Sentry
-    OpenTelemetry collector
     Vector
     Tetragon (ebpf)
     YDB instead Kafka (what?! yes! :) )
     OpenTracing 
-    Jaeger
-    Try to create applications in Python and Go with tracing, or add an auto-tracing tool.

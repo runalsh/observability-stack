@@ -67,6 +67,7 @@ volumes:
     zerotier_data:
     tailscale_data:
     influx_data:
+    clickhouse_data:
 
 services:
 
@@ -316,6 +317,7 @@ services:
       - GF_DEFAULT_INSTANCE_NAME=localhost
       - GF_USERS_ALLOW_SIGN_UP=false
       - GF_SERVER_ENABLE_GZIP=true
+      - GF_EXPLORE_ENABLED=true
       - GF_PATHS_DATA=/var/lib/grafana
       - GF_SERVER_ROOT_URL=http://localhost:3000
       - GRAFANA_PORT=3000
@@ -687,6 +689,19 @@ services:
       - "4317:4317"        # OTLP gRPC receiver
       - "4318:4318" # OTLP/HTTP receiver
       - "55680:55679" # zpages extension
+      # - "3200:3100"     # Loki/Logql HTTP receiver
+      # - "3201:3200"     # Loki/Logql gRPC receiver
+      # - "8088:8088"     # Splunk HEC receiver
+      # - "5514:5514"     # Syslog TCP Rereceiverceiver
+      # - "24224:24224"   # Fluent Forward receiver
+      # - "4317:4317"     # OTLP gRPC receiver
+      # - "4318:4318"     # OTLP HTTP receiver
+      # - "14250:14250"   # Jaeger gRPC receiver
+      # - "14268:14268"   # Jaeger thrift HTTP receiver
+      # - "9411:9411"     # Zipkin Trace receiver
+      # - "11800:11800"   # Skywalking gRPC receiver
+      # - "12800:12800"   # Skywalking HTTP receiver
+      # - "8086:8086"     # InfluxDB Line proto HTTP
     volumes:
       - ./etc/telemetrygen/config.yaml:/etc/otel-collector-config.yaml # https://opentelemetry.io/docs/collector/configuration/
     networks:
@@ -945,13 +960,47 @@ services:
         deploy:
           replicas: $thanos       
 
+  clickhouse:
+    image: clickhouse/clickhouse-server:24.5-alpine
+    container_name: clickhouse
+    environment:
+      - CLICKHOUSE_USER=clickhouseuser
+      - CLICKHOUSE_PASSWORD=clickhousepasswd
+    ports:
+      - 8123:8123
+    networks:
+      - observability
+    deploy:
+      replicas: $clickhouse 
 
+  qryn:
+    image: qxip/qryn:3.2.25
+    ports:
+      - "3101:3100"
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse
+    environment:
+      - CLICKHOUSE_SERVER=clickhouse
+      - CLICKHOUSE_PORT=8123
+      - CLICKHOUSE_PROTO="https"
+      - CLICKHOUSE_AUTH=clickhouseuser:clickhousepasswd
+      - CLICKHOUSE_DB=qryn
+      - CLUSTER_NAME="chcluster"
+    networks:
+      - observability
+    deploy:
+      replicas: $qryn 
 
-
-
-
-
-
+  vector:
+    image: timberio/vector:0.10.0-alpine
+    container_name: vector
+    restart: unless-stopped
+    volumes:
+      - ./vector/vector.toml:/etc/vector/vector.toml:ro
+    networks:
+      - observability  
+    deploy:
+      replicas: $vector 
 
 
 

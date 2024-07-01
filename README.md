@@ -15,7 +15,7 @@ Contain:
       Storage: minio (save metrics and logs), influxdb, thanos, clickhouse
       SEC: keycloak
       Log generation: flog, log-generator (apache, from pip), opentelemetry, gatling, jmeter
-      Traces: jaeger
+      Traces: jaeger, zipkin
       Other: watchtower, tailscale, zerotier, certbot, angie, caddy, postgres, 
             portainer + docker socket proxy, qryn
 

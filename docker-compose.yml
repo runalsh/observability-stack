@@ -992,7 +992,7 @@ services:
       replicas: $qryn 
 
   vector:
-    image: timberio/vector:0.10.0-alpine
+    image: timberio/vector:0.39.0-alpine
     container_name: vector
     restart: unless-stopped
     volumes:

@@ -961,7 +961,7 @@ services:
           replicas: $thanos       
 
   clickhouse:
-    image: clickhouse/clickhouse-server:24.5-alpine
+    image: clickhouse/clickhouse-server:24.6-alpine
     container_name: clickhouse
     environment:
       - CLICKHOUSE_USER=clickhouseuser

@@ -975,6 +975,7 @@ services:
 
   qryn:
     image: qxip/qryn:3.2.25
+    container_name: qryn
     ports:
       - "3101:3100"
     volumes:
@@ -985,7 +986,6 @@ services:
       - CLICKHOUSE_PROTO="https"
       - CLICKHOUSE_AUTH=clickhouseuser:clickhousepasswd
       - CLICKHOUSE_DB=qryn
-      - CLUSTER_NAME="chcluster"
     networks:
       - observability
     deploy:

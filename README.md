@@ -6,18 +6,18 @@ Access to services available via overlay networks (Tailscale and ZeroTier).
 
 Contain:
 
-      Metrics aggregation: prometheus, victoriametrics
+      Metrics aggregation: prometheus, victoriametrics, vector
       Metrics scrape: vmagent (victoriametrics), pushgateway, telegraf
       Logs aggregation: loki, victorialogs
       Exporters: node_exporter, cadvizor, blackbox-exporter, promtail
       Aletring: alertmanager, vmalert
       UI: grafana
-      Storage: minio (save metrics and logs), influxdb, thanos
+      Storage: minio (save metrics and logs), influxdb, thanos, clickhouse
       SEC: keycloak
       Log generation: flog, log-generator (apache, from pip), opentelemetry, gatling, jmeter
       Traces: jaeger
       Other: watchtower, tailscale, zerotier, certbot, angie, caddy, postgres, 
-            portainer + docker socket proxy
+            portainer + docker socket proxy, qryn
 
       Full stacks: 
             ./elasticsearch - ELK/EFK and ELK+ (ELK+Filebeat+Kafka)
@@ -34,7 +34,7 @@ Contain:
 TODO:
 
     Sentry
-    Vector
+    
     Tetragon (ebpf)
     YDB instead Kafka (what?! yes! :) )
     OpenTracing 

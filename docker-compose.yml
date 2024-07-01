@@ -996,17 +996,36 @@ services:
     container_name: vector
     restart: unless-stopped
     volumes:
-      - ./vector/vector.toml:/etc/vector/vector.toml:ro
+      - ./etc/vector/vector.toml:/etc/vector/vector.toml:ro
     networks:
       - observability  
     deploy:
       replicas: $vector 
 
+  cloki:
+    image: qxip/cloki:3.2.25
+    container_name: cloki
+    ports:
+      - "3102:3100"
+    environment:
+      - CLICKHOUSE_SERVER=clickhouse
+      - CLICKHOUSE_DB=cloki
+      - CLICKHOUSE_AUTH=clickhouseuser:clickhousepasswd
+    networks:
+      - observability  
+    deploy:
+      replicas: $cloki
 
-
-
-
-
+  pastash:
+    image: qxip/pastash-loki
+    container_name: pastash
+    volumes:
+      - ./etc/cloki/pastash.json:/config/loki.conf
+      - /var/log:/var/log:ro
+    networks:
+      - observability  
+    deploy:
+      replicas: $cloki 
 
 
 

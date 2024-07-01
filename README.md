@@ -8,7 +8,7 @@ Contain:
 
       Metrics aggregation: prometheus, victoriametrics, vector
       Metrics scrape: vmagent (victoriametrics), pushgateway, telegraf
-      Logs aggregation: loki, victorialogs
+      Logs aggregation: loki, victorialogs, cloki
       Exporters: node_exporter, cadvizor, blackbox-exporter, promtail
       Aletring: alertmanager, vmalert
       UI: grafana

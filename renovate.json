@@ -8,6 +8,9 @@
       "groupName": "dependency (minor, major)"
     }
     ],
+    "patch": {
+        "enabled": false
+    },
     "git-submodules": {
         "enabled": true
     }

@@ -2,5 +2,15 @@
     "$schema": "https://docs.renovatebot.com/renovate-schema.json",
     "extends": [
       "config:recommended"
-    ]
+    ],
+    "packageRules": [
+    {
+      "matchUpdateTypes": ["minor", "digest", "major"],
+      "automerge": true,
+      "groupName": "dependency updates"
+    }
+    ],
+    "git-submodules": {
+        "enabled": true
+    }
 }

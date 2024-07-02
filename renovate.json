@@ -5,9 +5,9 @@
     ],
     "packageRules": [
     {
-      "matchUpdateTypes": ["minor", "digest", "major"],
+      "matchUpdateTypes": ["minor", "major"],
       "automerge": true,
-      "groupName": "dependency updates"
+      "groupName": "dependency (minor, major)"
     }
     ],
     "git-submodules": {

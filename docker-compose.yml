@@ -370,6 +370,19 @@ services:
     logging: *default-logging 
     deploy:
       replicas: $watchtower
+    
+  whatsupdocker:
+    image: fmartinou/whats-up-docker:6.4.1
+    container_name: whatsupdocker
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 3200:3000
+    deploy:
+      replicas: $whatsupdocker  
+    restart: unless-stopped
+    networks:
+      - observability
 
   tailscale:
     privileged: true

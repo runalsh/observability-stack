@@ -171,7 +171,7 @@ services:
       replicas: $cadvisor
 
   loki:
-    image: grafana/loki:3.0.0
+    image: grafana/loki:3.1.0
     container_name: loki
     user: root
     volumes:
@@ -190,7 +190,7 @@ services:
       replicas: $loki
 
   promtail:
-    image: grafana/promtail:3.0.0
+    image: grafana/promtail:3.1.0
     container_name: promtail
     privileged: true
     volumes:
@@ -242,7 +242,7 @@ services:
       replicas: $vmagent 
 
   telegraf:
-    image: telegraf:1.31.0-alpine
+    image: telegraf:1.31.1-alpine
     container_name: telegraf
     volumes:
       - ./etc/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
@@ -282,7 +282,7 @@ services:
 
   victorialogs:
     container_name: victorialogs
-    image: docker.io/victoriametrics/victoria-logs:v0.26.1-victorialogs
+    image: docker.io/victoriametrics/victoria-logs:v0.27.0-victorialogs
     command:
       - '--storageDataPath=/var/lib/victorialogs'
       - '--loggerFormat=json'
@@ -692,7 +692,7 @@ services:
 
   telemetrygen:
     container_name: telemetrygen
-    image: otel/opentelemetry-collector:0.103.1
+    image: otel/opentelemetry-collector:0.104.0
     ports:
       - "1888:1888"   # pprof extension
       - "8888:8888"   # Prometheus metrics exposed by the collector

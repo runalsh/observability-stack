@@ -1,6 +1,17 @@
 {
     "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-    "extends": [
-      "config:recommended"
-    ]
+    "extends": ["config:base", "group:recommended", "config:recommended"],
+    "packageRules": [
+    {
+      "matchUpdateTypes": ["minor", "major"],
+      "automerge": true,
+      "groupName": "dependency (minor, major)"
+    }
+    ],
+    "patch": {
+        "enabled": false
+    },
+    "git-submodules": {
+        "enabled": true
+    }
 }

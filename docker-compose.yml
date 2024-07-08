@@ -68,6 +68,7 @@ volumes:
     tailscale_data:
     influx_data:
     clickhouse_data:
+    mimir_data:
 
 services:
 
@@ -1040,9 +1041,19 @@ services:
     deploy:
       replicas: $cloki 
 
-
-
-
+  mimir:
+    image: grafana/mimir:2.13.0
+    command: ["-config.file=/etc/mimir.yaml"]
+    hostname: mimir
+    container_name: mimir
+    volumes:
+      - ./etc/mimir/mimir.yaml:/etc/mimir.yaml
+      - ./etc/mimir/alertmanager-fallback-config.yaml:/etc/alertmanager-fallback-config.yaml
+      - mimir_data:/data
+    networks:
+      - observability  
+    deploy:
+      replicas: $mimir 
 
 
 

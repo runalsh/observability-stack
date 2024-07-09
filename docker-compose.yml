@@ -744,7 +744,7 @@ services:
       replicas: $jaeger  
 
   dockerproxy:
-    image: tecnativa/docker-socket-proxy:0.1.2
+    image: tecnativa/docker-socket-proxy:0.2.0
     restart: always
     container_name: dockerproxy
     networks:

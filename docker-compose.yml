@@ -827,7 +827,7 @@ services:
       replicas: $influxdb  
 
   thanos-sidecar-1:
-        image: quay.io/thanos/thanos:v0.35.1
+        image: quay.io/thanos/thanos:v0.36.0
         volumes:
             - ./etc/thanos/:/etc/thanos/
             - prometheus_data:/var/lib/prometheus
@@ -848,7 +848,7 @@ services:
           replicas: $thanos   
 
   thanos-query-frontend:
-        image: quay.io/thanos/thanos:v0.35.1
+        image: quay.io/thanos/thanos:v0.36.0
         command:
             - 'query-frontend'
             - '--http-address=0.0.0.0:10901'
@@ -864,7 +864,7 @@ services:
           replicas: $thanos     
 
   thanos-querier:
-        image: quay.io/thanos/thanos:v0.35.1
+        image: quay.io/thanos/thanos:v0.36.0
         command:
             - 'query'
             - '--grpc-address=0.0.0.0:10091'
@@ -887,7 +887,7 @@ services:
           replicas: $thanos       
 
   thanos-store-gateway:
-        image: quay.io/thanos/thanos:v0.35.1
+        image: quay.io/thanos/thanos:v0.36.0
         volumes:
             - ./etc/thanos/:/etc/thanos/
         command:
@@ -905,7 +905,7 @@ services:
           replicas: $thanos       
 
   thanos-compactor:
-        image: quay.io/thanos/thanos:v0.35.1
+        image: quay.io/thanos/thanos:v0.36.0
         volumes:
             - ./etc/thanos/:/etc/thanos/
         command:
@@ -923,7 +923,7 @@ services:
           replicas: $thanos       
 
   thanos-ruler:
-        image: quay.io/thanos/thanos:v0.35.1
+        image: quay.io/thanos/thanos:v0.36.0
         volumes:
             - ./etc/thanos/:/etc/thanos/
         command:
@@ -951,7 +951,7 @@ services:
           replicas: $thanos       
 
   thanos-bucket-web:
-        image: quay.io/thanos/thanos:v0.35.1
+        image: quay.io/thanos/thanos:v0.36.0
         volumes:
             - ./etc/thanos/:/etc/thanos/
         command:

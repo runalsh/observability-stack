@@ -1,7 +1,7 @@
 services:
 
   opensearch:
-    image: opensearchproject/opensearch:2.16.0
+    image: opensearchproject/opensearch:2.17.0
     container_name: opensearch
     environment:
       # - OPENSEARCH_INITIAL_ADMIN_PASSWORD=@L0dIcq&7gn44GTH #default = admin
@@ -65,7 +65,7 @@ services:
       replicas: $logstashos   
 
   opensearch-dashboards:
-    image: opensearchproject/opensearch-dashboards:2.16.0
+    image: opensearchproject/opensearch-dashboards:2.17.0
     container_name: opensearch-dashboards
     ports:
       - 5601:5601

@@ -172,7 +172,7 @@ services:
       replicas: $cadvisor
 
   loki:
-    image: grafana/loki:3.1.0
+    image: grafana/loki:3.2.0
     container_name: loki
     user: root
     volumes:
@@ -191,7 +191,7 @@ services:
       replicas: $loki
 
   promtail:
-    image: grafana/promtail:3.1.0
+    image: grafana/promtail:3.2.0
     container_name: promtail
     privileged: true
     volumes:
@@ -283,7 +283,7 @@ services:
 
   victorialogs:
     container_name: victorialogs
-    image: docker.io/victoriametrics/victoria-logs:v0.29.0-victorialogs
+    image: docker.io/victoriametrics/victoria-logs:v0.31.0-victorialogs
     command:
       - '--storageDataPath=/var/lib/victorialogs'
       - '--loggerFormat=json'
@@ -388,7 +388,7 @@ services:
   tailscale:
     privileged: true
     container_name: tailscale
-    image: tailscale/tailscale:v1.72.0
+    image: tailscale/tailscale:v1.74.1
     volumes:
       - tailscale_data:/var/lib/tailscale
       - /dev/net/tun:/dev/net/tun                     # Required for tailscale to work
@@ -466,7 +466,7 @@ services:
       replicas: $vmalert
 
   pushgateway:
-    image: prom/pushgateway:v1.9.0
+    image: prom/pushgateway:v1.10.0
     container_name: pushgateway
     restart: always
     ports:
@@ -535,7 +535,7 @@ services:
       replicas: $angie_init_htpasswd
 
   angie_init_cert:
-    image: runalsh/angie:1.6.0
+    image: runalsh/angie:1.7.0
     container_name: angie_init_cert
     command: sh -c "[ -f /etc/angie_data/privkey.pem ] && { echo 'File /etc/angie_data/privkey.pem exists'; exit 1; } || mkdir -p /etc/angie_data && apk add --no-cache openssl && openssl req -x509 -nodes -days 3650 -newkey rsa:2048 -keyout /etc/angie_data/privkey.pem -out /etc/angie_data/certificate.pem -subj '/CN=your_domain.com'"
     volumes:
@@ -545,7 +545,7 @@ services:
       replicas: $angie_init_cert
 
   angie:
-    image: runalsh/angie:1.6.0
+    image: runalsh/angie:1.7.0
     container_name: angie
     depends_on:
       - angie_init_htpasswd
@@ -693,7 +693,7 @@ services:
 
   telemetrygen:
     container_name: telemetrygen
-    image: otel/opentelemetry-collector:0.109.0
+    image: otel/opentelemetry-collector:0.110.0
     ports:
       - "1888:1888"   # pprof extension
       - "8888:8888"   # Prometheus metrics exposed by the collector
@@ -975,7 +975,7 @@ services:
           replicas: $thanos       
 
   clickhouse:
-    image: clickhouse/clickhouse-server:24.8-alpine
+    image: clickhouse/clickhouse-server:24.9-alpine
     container_name: clickhouse
     environment:
       - CLICKHOUSE_USER=clickhouseuser

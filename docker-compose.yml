@@ -283,7 +283,7 @@ services:
 
   victorialogs:
     container_name: victorialogs
-    image: docker.io/victoriametrics/victoria-logs:v0.35.0-victorialogs
+    image: docker.io/victoriametrics/victoria-logs:v0.36.0-victorialogs
     command:
       - '--storageDataPath=/var/lib/victorialogs'
       - '--loggerFormat=json'
@@ -388,7 +388,7 @@ services:
   tailscale:
     privileged: true
     container_name: tailscale
-    image: tailscale/tailscale:v1.74.1
+    image: tailscale/tailscale:v1.76.1
     volumes:
       - tailscale_data:/var/lib/tailscale
       - /dev/net/tun:/dev/net/tun                     # Required for tailscale to work

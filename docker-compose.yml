@@ -145,7 +145,7 @@ services:
       replicas: $alertmanager  
 
   cadvisor:
-    image: gcr.io/cadvisor/cadvisor:v0.50.0
+    image: gcr.io/cadvisor/cadvisor:v0.51.0
     container_name: cadvisor
     privileged: true
     devices:
@@ -283,7 +283,7 @@ services:
 
   victorialogs:
     container_name: victorialogs
-    image: docker.io/victoriametrics/victoria-logs:v0.39.0-victorialogs
+    image: docker.io/victoriametrics/victoria-logs:v0.40.0-victorialogs
     command:
       - '--storageDataPath=/var/lib/victorialogs'
       - '--loggerFormat=json'

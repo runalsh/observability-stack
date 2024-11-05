@@ -509,7 +509,7 @@ services:
       replicas: $caddy
 
   certbot:
-    image: certbot/certbot:v2.11.0
+    image: certbot/certbot:v3.0.0
     container_name: certbot
     volumes:
       - ./nginx/certbot/conf:/etc/letsencrypt

@@ -172,7 +172,7 @@ services:
       replicas: $cadvisor
 
   loki:
-    image: grafana/loki:3.2.0
+    image: grafana/loki:3.3.2
     container_name: loki
     user: root
     volumes:
@@ -191,7 +191,7 @@ services:
       replicas: $loki
 
   promtail:
-    image: grafana/promtail:3.2.0
+    image: grafana/promtail:3.3.2
     container_name: promtail
     privileged: true
     volumes:
@@ -215,7 +215,7 @@ services:
 
   vmagent:
     container_name: vmagent
-    image: victoriametrics/vmagent:v1.106.0
+    image: victoriametrics/vmagent:v1.108.1
     ports:
       - 8429:8429
       - 2003:2003
@@ -243,7 +243,7 @@ services:
       replicas: $vmagent 
 
   telegraf:
-    image: telegraf:1.32.0-alpine
+    image: telegraf:1.33.0-alpine
     container_name: telegraf
     volumes:
       - ./etc/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
@@ -258,7 +258,7 @@ services:
 
   victoriametrics:
     container_name: victoriametrics
-    image: victoriametrics/victoria-metrics:v1.106.0
+    image: victoriametrics/victoria-metrics:v1.108.1
     ports:
       - 8428:8428
     volumes:
@@ -283,7 +283,7 @@ services:
 
   victorialogs:
     container_name: victorialogs
-    image: docker.io/victoriametrics/victoria-logs:v1.0.0-victorialogs
+    image: docker.io/victoriametrics/victoria-logs:v1.4.0-victorialogs
     command:
       - '--storageDataPath=/var/lib/victorialogs'
       - '--loggerFormat=json'
@@ -300,7 +300,7 @@ services:
       replicas: $victorialogs
 
   grafana:
-    image: grafana/grafana:11.3.0
+    image: grafana/grafana:11.4.0
     container_name: grafana
     entrypoint: [ "/bin/bash", "-c" ]
     command: [ "/etc/grafana/download.sh && /run.sh" ]
@@ -388,7 +388,7 @@ services:
   tailscale:
     privileged: true
     container_name: tailscale
-    image: tailscale/tailscale:v1.76.1
+    image: tailscale/tailscale:v1.78.3
     volumes:
       - tailscale_data:/var/lib/tailscale
       - /dev/net/tun:/dev/net/tun                     # Required for tailscale to work
@@ -437,7 +437,7 @@ services:
 
   vmalert:
     container_name: vmalert
-    image: victoriametrics/vmalert:v1.106.0
+    image: victoriametrics/vmalert:v1.108.1
     # depends_on:
     #   - "victoriametrics"
     #   - "alertmanager"
@@ -623,7 +623,7 @@ services:
 
   postgres:
     container_name: postgres
-    image: postgres:17.0-alpine
+    image: postgres:17.2-alpine
     environment:
       POSTGRES_DB: keycloak
       POSTGRES_USER: keycloak
@@ -693,7 +693,7 @@ services:
 
   telemetrygen:
     container_name: telemetrygen
-    image: otel/opentelemetry-collector:0.112.0
+    image: otel/opentelemetry-collector:0.116.1
     ports:
       - "1888:1888"   # pprof extension
       - "8888:8888"   # Prometheus metrics exposed by the collector
@@ -734,7 +734,7 @@ services:
       replicas: $zipkin
 
   jaeger:
-    image: jaegertracing/all-in-one:1.62.0
+    image: jaegertracing/all-in-one:1.64.0
     container_name: jaeger
     ports:
       - '16686:16686'
@@ -786,7 +786,7 @@ services:
       replicas: $dockerproxy  
 
   portainer:
-    image: portainer/portainer-ce:2.23.0-alpine
+    image: portainer/portainer-ce:2.25.1-alpine
     restart: unless-stopped
     container_name: portainer
     networks:
@@ -827,7 +827,7 @@ services:
       replicas: $influxdb  
 
   thanos-sidecar-1:
-        image: quay.io/thanos/thanos:v0.36.0
+        image: quay.io/thanos/thanos:v0.37.2
         volumes:
             - ./etc/thanos/:/etc/thanos/
             - prometheus_data:/var/lib/prometheus
@@ -848,7 +848,7 @@ services:
           replicas: $thanos   
 
   thanos-query-frontend:
-        image: quay.io/thanos/thanos:v0.36.0
+        image: quay.io/thanos/thanos:v0.37.2
         command:
             - 'query-frontend'
             - '--http-address=0.0.0.0:10901'
@@ -864,7 +864,7 @@ services:
           replicas: $thanos     
 
   thanos-querier:
-        image: quay.io/thanos/thanos:v0.36.0
+        image: quay.io/thanos/thanos:v0.37.2
         command:
             - 'query'
             - '--grpc-address=0.0.0.0:10091'
@@ -887,7 +887,7 @@ services:
           replicas: $thanos       
 
   thanos-store-gateway:
-        image: quay.io/thanos/thanos:v0.36.0
+        image: quay.io/thanos/thanos:v0.37.2
         volumes:
             - ./etc/thanos/:/etc/thanos/
         command:
@@ -905,7 +905,7 @@ services:
           replicas: $thanos       
 
   thanos-compactor:
-        image: quay.io/thanos/thanos:v0.36.0
+        image: quay.io/thanos/thanos:v0.37.2
         volumes:
             - ./etc/thanos/:/etc/thanos/
         command:
@@ -923,7 +923,7 @@ services:
           replicas: $thanos       
 
   thanos-ruler:
-        image: quay.io/thanos/thanos:v0.36.0
+        image: quay.io/thanos/thanos:v0.37.2
         volumes:
             - ./etc/thanos/:/etc/thanos/
         command:
@@ -951,7 +951,7 @@ services:
           replicas: $thanos       
 
   thanos-bucket-web:
-        image: quay.io/thanos/thanos:v0.36.0
+        image: quay.io/thanos/thanos:v0.37.2
         volumes:
             - ./etc/thanos/:/etc/thanos/
         command:
@@ -975,7 +975,7 @@ services:
           replicas: $thanos       
 
   clickhouse:
-    image: clickhouse/clickhouse-server:24.10-alpine
+    image: clickhouse/clickhouse-server:24.12-alpine
     container_name: clickhouse
     environment:
       - CLICKHOUSE_USER=clickhouseuser
@@ -1006,7 +1006,7 @@ services:
       replicas: $qryn 
 
   vector:
-    image: timberio/vector:0.42.0-alpine
+    image: timberio/vector:0.43.1-alpine
     container_name: vector
     restart: unless-stopped
     volumes:

@@ -509,7 +509,7 @@ services:
       replicas: $caddy
 
   certbot:
-    image: certbot/certbot:v3.0.0
+    image: certbot/certbot:v3.1.0
     container_name: certbot
     volumes:
       - ./nginx/certbot/conf:/etc/letsencrypt
@@ -734,7 +734,7 @@ services:
       replicas: $zipkin
 
   jaeger:
-    image: jaegertracing/all-in-one:1.64.0
+    image: jaegertracing/all-in-one:1.65.0
     container_name: jaeger
     ports:
       - '16686:16686'

@@ -466,7 +466,7 @@ services:
       replicas: $vmalert
 
   pushgateway:
-    image: prom/pushgateway:v1.10.0
+    image: prom/pushgateway:v1.11.0
     container_name: pushgateway
     restart: always
     ports:

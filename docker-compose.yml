@@ -478,7 +478,7 @@ services:
       replicas: $pushgateway
 
   caddy:
-    image: caddy:2.8.4
+    image: caddy:2.9.1
     container_name: caddy
     ports:
       - "3000:3000"
@@ -693,7 +693,7 @@ services:
 
   telemetrygen:
     container_name: telemetrygen
-    image: otel/opentelemetry-collector:0.116.1
+    image: otel/opentelemetry-collector:0.117.0
     ports:
       - "1888:1888"   # pprof extension
       - "8888:8888"   # Prometheus metrics exposed by the collector

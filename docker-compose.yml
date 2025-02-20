@@ -283,7 +283,7 @@ services:
 
   victorialogs:
     container_name: victorialogs
-    image: docker.io/victoriametrics/victoria-logs:v1.10.0-victorialogs
+    image: docker.io/victoriametrics/victoria-logs:v1.11.0-victorialogs
     command:
       - '--storageDataPath=/var/lib/victorialogs'
       - '--loggerFormat=json'
@@ -693,7 +693,7 @@ services:
 
   telemetrygen:
     container_name: telemetrygen
-    image: otel/opentelemetry-collector:0.119.0
+    image: otel/opentelemetry-collector:0.120.0
     ports:
       - "1888:1888"   # pprof extension
       - "8888:8888"   # Prometheus metrics exposed by the collector
@@ -786,7 +786,7 @@ services:
       replicas: $dockerproxy  
 
   portainer:
-    image: portainer/portainer-ce:2.26.0-alpine
+    image: portainer/portainer-ce:2.27.0-alpine
     restart: unless-stopped
     container_name: portainer
     networks:

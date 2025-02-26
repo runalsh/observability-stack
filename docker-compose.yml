@@ -641,7 +641,7 @@ services:
 
   blackbox-exporter:
     container_name: blackbox-exporter
-    image: bitnami/blackbox-exporter:0.25.0
+    image: bitnami/blackbox-exporter:0.26.0
     volumes:
       - ./etc/blackbox:/etc/blackbox:ro
     command:

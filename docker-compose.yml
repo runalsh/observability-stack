@@ -734,7 +734,7 @@ services:
       replicas: $zipkin
 
   jaeger:
-    image: jaegertracing/all-in-one:1.67.0
+    image: jaegertracing/all-in-one:1.68.0
     container_name: jaeger
     ports:
       - '16686:16686'

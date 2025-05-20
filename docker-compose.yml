@@ -1006,7 +1006,7 @@ services:
       replicas: $qryn 
 
   vector:
-    image: timberio/vector:0.46.0-alpine
+    image: timberio/vector:0.47.0-alpine
     container_name: vector
     restart: unless-stopped
     volumes:

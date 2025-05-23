@@ -215,7 +215,7 @@ services:
 
   vmagent:
     container_name: vmagent
-    image: victoriametrics/vmagent:v1.117.0
+    image: victoriametrics/vmagent:v1.118.0
     ports:
       - 8429:8429
       - 2003:2003
@@ -258,7 +258,7 @@ services:
 
   victoriametrics:
     container_name: victoriametrics
-    image: victoriametrics/victoria-metrics:v1.117.0
+    image: victoriametrics/victoria-metrics:v1.118.0
     ports:
       - 8428:8428
     volumes:
@@ -388,7 +388,7 @@ services:
   tailscale:
     privileged: true
     container_name: tailscale
-    image: tailscale/tailscale:v1.82.0
+    image: tailscale/tailscale:v1.84.0
     volumes:
       - tailscale_data:/var/lib/tailscale
       - /dev/net/tun:/dev/net/tun                     # Required for tailscale to work
@@ -437,7 +437,7 @@ services:
 
   vmalert:
     container_name: vmalert
-    image: victoriametrics/vmalert:v1.117.0
+    image: victoriametrics/vmalert:v1.118.0
     # depends_on:
     #   - "victoriametrics"
     #   - "alertmanager"

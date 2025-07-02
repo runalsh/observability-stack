@@ -599,7 +599,7 @@ services:
       replicas: $minio 
 
   keycloak:
-    image: keycloak/keycloak:26.2.0
+    image: keycloak/keycloak:26.3.0
     container_name: keycloak
     environment:
       KEYCLOAK_ADMIN: admin
@@ -693,7 +693,7 @@ services:
 
   telemetrygen:
     container_name: telemetrygen
-    image: otel/opentelemetry-collector:0.128.0
+    image: otel/opentelemetry-collector:0.129.1
     ports:
       - "1888:1888"   # pprof extension
       - "8888:8888"   # Prometheus metrics exposed by the collector

@@ -215,7 +215,7 @@ services:
 
   vmagent:
     container_name: vmagent
-    image: victoriametrics/vmagent:v1.122.0
+    image: victoriametrics/vmagent:v1.123.0
     ports:
       - 8429:8429
       - 2003:2003
@@ -258,7 +258,7 @@ services:
 
   victoriametrics:
     container_name: victoriametrics
-    image: victoriametrics/victoria-metrics:v1.122.0
+    image: victoriametrics/victoria-metrics:v1.123.0
     ports:
       - 8428:8428
     volumes:
@@ -388,7 +388,7 @@ services:
   tailscale:
     privileged: true
     container_name: tailscale
-    image: tailscale/tailscale:v1.84.0
+    image: tailscale/tailscale:v1.86.2
     volumes:
       - tailscale_data:/var/lib/tailscale
       - /dev/net/tun:/dev/net/tun                     # Required for tailscale to work
@@ -437,7 +437,7 @@ services:
 
   vmalert:
     container_name: vmalert
-    image: victoriametrics/vmalert:v1.122.0
+    image: victoriametrics/vmalert:v1.123.0
     # depends_on:
     #   - "victoriametrics"
     #   - "alertmanager"
@@ -509,7 +509,7 @@ services:
       replicas: $caddy
 
   certbot:
-    image: certbot/certbot:v4.1.0
+    image: certbot/certbot:v4.2.0
     container_name: certbot
     volumes:
       - ./nginx/certbot/conf:/etc/letsencrypt
@@ -693,7 +693,7 @@ services:
 
   telemetrygen:
     container_name: telemetrygen
-    image: otel/opentelemetry-collector:0.130.0
+    image: otel/opentelemetry-collector:0.131.1
     ports:
       - "1888:1888"   # pprof extension
       - "8888:8888"   # Prometheus metrics exposed by the collector
@@ -734,7 +734,7 @@ services:
       replicas: $zipkin
 
   jaeger:
-    image: jaegertracing/all-in-one:1.71.0
+    image: jaegertracing/all-in-one:1.72.0
     container_name: jaeger
     ports:
       - '16686:16686'
@@ -975,7 +975,7 @@ services:
           replicas: $thanos       
 
   clickhouse:
-    image: clickhouse/clickhouse-server:25.6-alpine
+    image: clickhouse/clickhouse-server:25.7-alpine
     container_name: clickhouse
     environment:
       - CLICKHOUSE_USER=clickhouseuser

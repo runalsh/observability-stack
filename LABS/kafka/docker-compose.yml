@@ -331,7 +331,7 @@ services:
       - zookeeper
 
   kafdrop:
-    image: obsidiandynamics/kafdrop:4.1.1-SNAPSHOT
+    image: obsidiandynamics/kafdrop:4.2.1-SNAPSHOT
     restart: "no"
     ports:
       - "9000:9000"

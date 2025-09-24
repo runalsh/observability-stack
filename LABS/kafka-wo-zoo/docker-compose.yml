@@ -51,7 +51,7 @@ services:
   #    - kafka3
 
   grafana:
-    image: grafana/grafana:12.1.0
+    image: grafana/grafana:12.2.0
     ports:
      - "3000:3000"
     environment:

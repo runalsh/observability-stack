@@ -300,7 +300,7 @@ services:
       replicas: $victorialogs
 
   grafana:
-    image: grafana/grafana:12.1.0
+    image: grafana/grafana:12.2.0
     container_name: grafana
     entrypoint: [ "/bin/bash", "-c" ]
     command: [ "/etc/grafana/download.sh && /run.sh" ]

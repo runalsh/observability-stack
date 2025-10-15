@@ -91,7 +91,7 @@ services:
       replicas: $zookeeper   
 
   kafka1:
-    image: confluentinc/cp-kafka:8.0.0
+    image: confluentinc/cp-kafka:8.1.0
     container_name: kafka1
     ports:
       - 9091:9091

@@ -101,7 +101,7 @@ services:
       replicas: $prometheus 
 
   nodeexporter:
-    image: prom/node-exporter:v1.9.0
+    image: prom/node-exporter:v1.10.0
     container_name: nodeexporter
     privileged: true
     volumes:

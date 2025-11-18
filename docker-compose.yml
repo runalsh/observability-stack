@@ -172,7 +172,7 @@ services:
       replicas: $cadvisor
 
   loki:
-    image: grafana/loki:3.5.0
+    image: grafana/loki:3.6.0
     container_name: loki
     user: root
     volumes:
@@ -191,7 +191,7 @@ services:
       replicas: $loki
 
   promtail:
-    image: grafana/promtail:3.5.0
+    image: grafana/promtail:3.6.0
     container_name: promtail
     privileged: true
     volumes:
@@ -215,7 +215,7 @@ services:
 
   vmagent:
     container_name: vmagent
-    image: victoriametrics/vmagent:v1.129.0
+    image: victoriametrics/vmagent:v1.130.0
     ports:
       - 8429:8429
       - 2003:2003
@@ -258,7 +258,7 @@ services:
 
   victoriametrics:
     container_name: victoriametrics
-    image: victoriametrics/victoria-metrics:v1.129.0
+    image: victoriametrics/victoria-metrics:v1.130.0
     ports:
       - 8428:8428
     volumes:
@@ -437,7 +437,7 @@ services:
 
   vmalert:
     container_name: vmalert
-    image: victoriametrics/vmalert:v1.129.0
+    image: victoriametrics/vmalert:v1.130.0
     # depends_on:
     #   - "victoriametrics"
     #   - "alertmanager"

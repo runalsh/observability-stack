@@ -300,7 +300,7 @@ services:
       replicas: $victorialogs
 
   grafana:
-    image: grafana/grafana:12.2.0
+    image: grafana/grafana:12.3.0
     container_name: grafana
     entrypoint: [ "/bin/bash", "-c" ]
     command: [ "/etc/grafana/download.sh && /run.sh" ]
@@ -693,7 +693,7 @@ services:
 
   telemetrygen:
     container_name: telemetrygen
-    image: otel/opentelemetry-collector:0.139.0
+    image: otel/opentelemetry-collector:0.140.1
     ports:
       - "1888:1888"   # pprof extension
       - "8888:8888"   # Prometheus metrics exposed by the collector
@@ -734,7 +734,7 @@ services:
       replicas: $zipkin
 
   jaeger:
-    image: jaegertracing/all-in-one:1.74.0
+    image: jaegertracing/all-in-one:1.75.0
     container_name: jaeger
     ports:
       - '16686:16686'

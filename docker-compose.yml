@@ -786,7 +786,7 @@ services:
       replicas: $dockerproxy  
 
   portainer:
-    image: portainer/portainer-ce:2.35.0-alpine
+    image: portainer/portainer-ce:2.36.0-alpine
     restart: unless-stopped
     container_name: portainer
     networks:

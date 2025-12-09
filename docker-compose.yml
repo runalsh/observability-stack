@@ -243,7 +243,7 @@ services:
       replicas: $vmagent 
 
   telegraf:
-    image: telegraf:1.36.0-alpine
+    image: telegraf:1.37.0-alpine
     container_name: telegraf
     volumes:
       - ./etc/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro

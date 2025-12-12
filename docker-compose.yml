@@ -809,7 +809,7 @@ services:
       replicas: $portainer  
 
   influxdb:
-    image: influxdb:2.7.6-alpine
+    image: influxdb:2.8.0-alpine
     container_name: influxdb
     restart: unless-stopped
     environment:

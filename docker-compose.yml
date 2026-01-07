@@ -73,7 +73,7 @@ volumes:
 services:
 
   prometheus:
-    image: prom/prometheus:v3.8.0
+    image: prom/prometheus:v3.9.0
     container_name: prometheus
     privileged: true
     user: root
@@ -693,7 +693,7 @@ services:
 
   telemetrygen:
     container_name: telemetrygen
-    image: otel/opentelemetry-collector:0.142.0
+    image: otel/opentelemetry-collector:0.143.1
     ports:
       - "1888:1888"   # pprof extension
       - "8888:8888"   # Prometheus metrics exposed by the collector

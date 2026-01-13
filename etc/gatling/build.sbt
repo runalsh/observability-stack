@@ -7,7 +7,7 @@ lazy val root = (project in file("."))
     inThisBuild(
       List(
         organization := "org.galaxio.performance",
-        scalaVersion := "2.13.14",
+        scalaVersion := "3.8.0",
         version      := "0.1.0",
       ),
     ),

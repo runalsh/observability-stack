@@ -29,7 +29,7 @@ services:
       replicas: $opensearch   
 
   filebeat-os:
-    image: elastic/filebeat:9.2.0
+    image: elastic/filebeat:9.3.0
     container_name: filebeat-os
     restart: unless-stopped
     command: filebeat -e -strict.perms=false

@@ -63,7 +63,7 @@ services:
     container_name: grafana
 
   postgres:
-    image: postgres:18.1-alpine
+    image: postgres:18.2-alpine
     container_name: postgres
     restart: always
     environment:

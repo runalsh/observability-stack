@@ -1,7 +1,7 @@
 services:
 
   prometheus:
-    image: prom/prometheus:v3.9.0
+    image: prom/prometheus:v3.10.0
     hostname: prometheus
     ports:
      - "9090:9090"
@@ -51,7 +51,7 @@ services:
      - kafka3
 
   grafana:
-    image: grafana/grafana:12.3.0
+    image: grafana/grafana:12.4.0
     ports:
      - "3000:3000"
     environment:

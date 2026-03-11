@@ -509,7 +509,7 @@ services:
       replicas: $caddy
 
   certbot:
-    image: certbot/certbot:v5.3.0
+    image: certbot/certbot:v5.4.0
     container_name: certbot
     volumes:
       - ./nginx/certbot/conf:/etc/letsencrypt
@@ -1006,7 +1006,7 @@ services:
       replicas: $qryn 
 
   vector:
-    image: timberio/vector:0.53.0-alpine
+    image: timberio/vector:0.54.0-alpine
     container_name: vector
     restart: unless-stopped
     volumes:

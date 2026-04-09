@@ -124,7 +124,7 @@ services:
       replicas: $nodeexporter
 
   alertmanager:
-    image: prom/alertmanager:v0.31.0
+    image: prom/alertmanager:v0.32.0
     container_name: alertmanager
     user: root
     volumes:

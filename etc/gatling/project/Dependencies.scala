@@ -6,5 +6,5 @@ object Dependencies {
     "io.gatling"            % "gatling-test-framework",
   ).map(_ % "3.11.3" % Test)
 
-  lazy val gatlingPicatinny: Seq[ModuleID] = Seq("org.galaxio" %% "gatling-picatinny" % "1.13.8")
+  lazy val gatlingPicatinny: Seq[ModuleID] = Seq("org.galaxio" %% "gatling-picatinny" % "1.15.6")
 }

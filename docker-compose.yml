@@ -73,7 +73,7 @@ volumes:
 services:
 
   prometheus:
-    image: prom/prometheus:v3.12.0
+    image: prom/prometheus:v3.13.0
     container_name: prometheus
     privileged: true
     user: root
@@ -215,7 +215,7 @@ services:
 
   vmagent:
     container_name: vmagent
-    image: victoriametrics/vmagent:v1.146.0
+    image: victoriametrics/vmagent:v1.147.0
     ports:
       - 8429:8429
       - 2003:2003
@@ -258,7 +258,7 @@ services:
 
   victoriametrics:
     container_name: victoriametrics
-    image: victoriametrics/victoria-metrics:v1.146.0
+    image: victoriametrics/victoria-metrics:v1.147.0
     ports:
       - 8428:8428
     volumes:
@@ -437,7 +437,7 @@ services:
 
   vmalert:
     container_name: vmalert
-    image: victoriametrics/vmalert:v1.146.0
+    image: victoriametrics/vmalert:v1.147.0
     # depends_on:
     #   - "victoriametrics"
     #   - "alertmanager"
@@ -509,7 +509,7 @@ services:
       replicas: $caddy
 
   certbot:
-    image: certbot/certbot:v5.6.0
+    image: certbot/certbot:v5.7.0
     container_name: certbot
     volumes:
       - ./nginx/certbot/conf:/etc/letsencrypt
@@ -599,7 +599,7 @@ services:
       replicas: $minio 
 
   keycloak:
-    image: keycloak/keycloak:26.6.0
+    image: keycloak/keycloak:26.7.0
     container_name: keycloak
     environment:
       KEYCLOAK_ADMIN: admin
@@ -693,7 +693,7 @@ services:
 
   telemetrygen:
     container_name: telemetrygen
-    image: otel/opentelemetry-collector:0.155.0
+    image: otel/opentelemetry-collector:0.156.0
     ports:
       - "1888:1888"   # pprof extension
       - "8888:8888"   # Prometheus metrics exposed by the collector
@@ -827,7 +827,7 @@ services:
       replicas: $influxdb  
 
   thanos-sidecar-1:
-        image: quay.io/thanos/thanos:v0.41.0
+        image: quay.io/thanos/thanos:v0.42.0
         volumes:
             - ./etc/thanos/:/etc/thanos/
             - prometheus_data:/var/lib/prometheus
@@ -848,7 +848,7 @@ services:
           replicas: $thanos   
 
   thanos-query-frontend:
-        image: quay.io/thanos/thanos:v0.41.0
+        image: quay.io/thanos/thanos:v0.42.0
         command:
             - 'query-frontend'
             - '--http-address=0.0.0.0:10901'
@@ -864,7 +864,7 @@ services:
           replicas: $thanos     
 
   thanos-querier:
-        image: quay.io/thanos/thanos:v0.41.0
+        image: quay.io/thanos/thanos:v0.42.0
         command:
             - 'query'
             - '--grpc-address=0.0.0.0:10091'
@@ -887,7 +887,7 @@ services:
           replicas: $thanos       
 
   thanos-store-gateway:
-        image: quay.io/thanos/thanos:v0.41.0
+        image: quay.io/thanos/thanos:v0.42.0
         volumes:
             - ./etc/thanos/:/etc/thanos/
         command:
@@ -905,7 +905,7 @@ services:
           replicas: $thanos       
 
   thanos-compactor:
-        image: quay.io/thanos/thanos:v0.41.0
+        image: quay.io/thanos/thanos:v0.42.0
         volumes:
             - ./etc/thanos/:/etc/thanos/
         command:
@@ -923,7 +923,7 @@ services:
           replicas: $thanos       
 
   thanos-ruler:
-        image: quay.io/thanos/thanos:v0.41.0
+        image: quay.io/thanos/thanos:v0.42.0
         volumes:
             - ./etc/thanos/:/etc/thanos/
         command:
@@ -951,7 +951,7 @@ services:
           replicas: $thanos       
 
   thanos-bucket-web:
-        image: quay.io/thanos/thanos:v0.41.0
+        image: quay.io/thanos/thanos:v0.42.0
         volumes:
             - ./etc/thanos/:/etc/thanos/
         command:

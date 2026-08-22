@@ -73,7 +73,7 @@ volumes:
 services:
 
   prometheus:
-    image: prom/prometheus:v3.13.0
+    image: prom/prometheus:v3.14.0
     container_name: prometheus
     privileged: true
     user: root
@@ -215,7 +215,7 @@ services:
 
   vmagent:
     container_name: vmagent
-    image: victoriametrics/vmagent:v1.149.0
+    image: victoriametrics/vmagent:v1.150.0
     ports:
       - 8429:8429
       - 2003:2003
@@ -258,7 +258,7 @@ services:
 
   victoriametrics:
     container_name: victoriametrics
-    image: victoriametrics/victoria-metrics:v1.149.0
+    image: victoriametrics/victoria-metrics:v1.150.0
     ports:
       - 8428:8428
     volumes:
@@ -300,7 +300,7 @@ services:
       replicas: $victorialogs
 
   grafana:
-    image: grafana/grafana:13.1.0
+    image: grafana/grafana:13.2.0
     container_name: grafana
     entrypoint: [ "/bin/bash", "-c" ]
     command: [ "/etc/grafana/download.sh && /run.sh" ]
@@ -437,7 +437,7 @@ services:
 
   vmalert:
     container_name: vmalert
-    image: victoriametrics/vmalert:v1.149.0
+    image: victoriametrics/vmalert:v1.150.0
     # depends_on:
     #   - "victoriametrics"
     #   - "alertmanager"
@@ -693,7 +693,7 @@ services:
 
   telemetrygen:
     container_name: telemetrygen
-    image: otel/opentelemetry-collector:0.158.0
+    image: otel/opentelemetry-collector:0.159.0
     ports:
       - "1888:1888"   # pprof extension
       - "8888:8888"   # Prometheus metrics exposed by the collector
@@ -1042,7 +1042,7 @@ services:
       replicas: $cloki 
 
   mimir:
-    image: grafana/mimir:3.1.0
+    image: grafana/mimir:3.2.0
     command: ["-config.file=/etc/mimir.yaml"]
     hostname: mimir
     container_name: mimir

@@ -141,7 +141,7 @@ services:
 
   kafdrop:
     container_name: kafdrop
-    image: obsidiandynamics/kafdrop:4.2.0
+    image: obsidiandynamics/kafdrop:4.3.0
     ports:
       - "9095:9000"
     environment:

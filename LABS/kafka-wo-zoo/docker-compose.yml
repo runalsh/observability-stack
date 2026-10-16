@@ -1,7 +1,7 @@
 services:
 
   prometheus:
-    image: prom/prometheus:v3.14.0
+    image: prom/prometheus:v3.15.0
     hostname: prometheus
     ports:
      - "9090:9090"
@@ -212,7 +212,7 @@ services:
 
   kafdrop:
     container_name: kafdrop
-    image: obsidiandynamics/kafdrop:4.2.1-SNAPSHOT
+    image: obsidiandynamics/kafdrop:4.3.1-SNAPSHOT
     restart: "no"
     ports:
       - "9000:9000"
